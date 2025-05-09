@@ -9,7 +9,8 @@ module "aurora_module_postgresql" {
   }
 
   name               = "postgresql"
-  /*allow_ingress_from = []*/
+  instance_class     = "db.t3.small"
+  /*allow_ingress_from = []
 
   enable_alarms = [
     "CPUUtilization", "FreeableMemory", "DatabaseConnections", "RDSToAuroraPostgreSQLReplicaLag", "ReadIOPS",
@@ -23,9 +24,9 @@ module "aurora_module_postgresql" {
   aurora_write_iops_threshold            = 10 #write iops count per sec
   aurora_snapshot_storage_used_threshold = 3758096384 #in bytes, 3.5gb
   cloudwatch_metric_period               = 60 #seconds
-  /*allow_iam_read                         = ["prn::srcd2-showcase-sit-rt-role", "srcd2-showcase-sit-ingress-role"]*/
+  allow_iam_read                         = ["prn::srcd2-showcase-sit-rt-role", "srcd2-showcase-sit-ingress-role"]
   number_of_read_replicas                = 1 # Max 3 allowed
-  /*cluster_parameters                     = [
+  cluster_parameters                     = [
     {
       name  = "application_name"
       value = "aurpsql-hscl"
