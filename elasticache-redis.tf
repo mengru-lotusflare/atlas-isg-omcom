@@ -1,4 +1,4 @@
-module "elasticache_module_cluster" {
+module "elasticache_module_cluster_redis" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-elasticache-redis/aws"
 
   providers = {
