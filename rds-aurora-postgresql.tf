@@ -1,11 +1,11 @@
-module "aurora_module_postgresql" {
+module "aurora_module" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-rds-aurora-postgresql/aws"
 
   providers = {
     aws.security    = aws.security,
     aws.environment = aws.environment,
     aws.route53     = aws.route53,
-   /*aws.instance_scheduler = aws.instance_scheduler*/ #placeholder if this is required need to add the scheduler in project facts
+    aws.instance_scheduler = aws.instance_scheduler
   }
 
   name               = "postgresql"
