@@ -5,7 +5,7 @@ module "aurora_module_postgresql" {
     aws.security    = aws.security,
     aws.environment = aws.environment,
     aws.route53     = aws.route53,
-   aws.instance_scheduler = aws.instance_scheduler
+   /*aws.instance_scheduler = aws.instance_scheduler*/ #placeholder if this is required need to add the scheduler in project facts
   }
 
   name               = "postgresql"
