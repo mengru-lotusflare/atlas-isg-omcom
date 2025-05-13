@@ -9,7 +9,7 @@ module "aurora_module" {
   }
 
   name               = "postgresql"
-  instance_class     = "db.t4g.smal"
+  instance_class     = "db.t4g.medium"
   /*allow_ingress_from = []
 
   enable_alarms = [
