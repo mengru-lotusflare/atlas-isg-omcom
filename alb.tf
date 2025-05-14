@@ -74,7 +74,7 @@ module "alb_module" {
         map_key            = "additional1"
         target_group_name  = "TG3"
         target_id          = "192.168.1.41"
-        availability_zone  = "all"q
+        availability_zone  = "all"
         port               = 9103
     }/*,
     {
