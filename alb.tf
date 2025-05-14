@@ -9,7 +9,7 @@ module "alb_module" {
   }
 
   name              = "alb"
-  alb_subnet_type   = "Private"
+  alb_subnet_type   = "alb"
   listener_configurations = [
     {
       port_number        = 443
