@@ -35,7 +35,7 @@ module "alb_module" {
   additional_target_group_attachment = [
     {
         map_key            = "additional1"
-        target_group_name  = ""
+        target_group_name  = "tgn1"
         target_id          = "192.168.1.41"
         availability_zone  = "all"
         port               = 9103
