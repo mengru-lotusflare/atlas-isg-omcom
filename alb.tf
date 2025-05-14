@@ -35,7 +35,7 @@ module "alb_module" {
 }*/
   target_group_configurations = [
     {
-        target_group_name     = ""
+        target_group_name     = "target_group1"
         port     = 7890
         target_type = "ip"
         protocol = "HTTPS"
@@ -44,7 +44,7 @@ module "alb_module" {
             cookie_duration = 60
             type            = "lb_cookie"
         }
-        target_id = ""
+        target_id = "10.220.193.70"
     }/*,
     {
         target_group_name        = "TG2"
@@ -73,7 +73,7 @@ module "alb_module" {
     {
         map_key            = "additional1"
         target_group_name  = ""
-        target_id          = ""
+        target_id          = "192.168.1.41"
         availability_zone  = "all"
         port               = 9103
     }/*,
