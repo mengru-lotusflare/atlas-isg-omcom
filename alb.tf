@@ -20,7 +20,7 @@ module "alb_module" {
   ]
   target_group_configurations = [
     {
-        target_group_name     = "target_group1"
+        target_group_name     = "tgn1"
         port     = 7890
         target_type = "ip"
         protocol = "HTTPS"
