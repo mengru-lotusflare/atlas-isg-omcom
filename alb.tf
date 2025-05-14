@@ -13,8 +13,8 @@ module "alb_module" {
   listener_configurations = [
     {
       port_number        = 443
-      protocol           = "n/a"
-      target_group_name  = "n/a"
+      protocol           = "HTTPS"
+      target_group_name  = "TG1"
       allow_ingress_from = ["n/a"]
     }/*,
     {
@@ -35,16 +35,16 @@ module "alb_module" {
 }*/
   target_group_configurations = [
     {
-        target_group_name     = "n/a"
+        target_group_name     = "TG1"
         port     = 7890
-        target_type = "n/a"
-        protocol = "n/a"
+        target_type = "ip"
+        protocol = "HTTPS"
         stickiness = {
             cookie_enabled  = true
             cookie_duration = 60
             type            = "lb_cookie"
         }
-        target_id = "n/a"
+        target_id = "10.220.146.160"
     }/*,
     {
         target_group_name        = "TG2"
@@ -67,9 +67,9 @@ module "alb_module" {
             type     = "lb_cookie"
         }
         target_id = "i-073a1977b86237ba7"
-    }*/
+    }
   ]
-  /*additional_target_group_attachment = [
+  additional_target_group_attachment = [
     {
         map_key            = "additional1"
         target_group_name  = "TG3"
@@ -102,6 +102,6 @@ module "alb_module" {
         target_group_name  = "3"
         target_id          = "i-084bfb8f894d58216"
         port               = 1112
-    },
-  ]*/
+    },*/
+  ]
 }
