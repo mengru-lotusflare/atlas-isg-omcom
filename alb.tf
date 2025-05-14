@@ -15,7 +15,7 @@ module "alb_module" {
       port_number        = 443
       protocol           = "HTTPS"
       target_group_name  = "TG1"
-      allow_ingress_from = ["n/a"]
+      allow_ingress_from = [""]
     }/*,
     {
       port_number        = 80
