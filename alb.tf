@@ -44,7 +44,7 @@ module "alb_module" {
             cookie_duration = 60
             type            = "lb_cookie"
         }
-        target_id = "10.220.146.160"
+        target_id = "10.220.193.70"
     }/*,
     {
         target_group_name        = "TG2"
@@ -67,16 +67,16 @@ module "alb_module" {
             type     = "lb_cookie"
         }
         target_id = "i-073a1977b86237ba7"
-    }
+    }*/
   ]
   additional_target_group_attachment = [
     {
         map_key            = "additional1"
         target_group_name  = "TG3"
         target_id          = "192.168.1.41"
-        availability_zone  = "all"
+        availability_zone  = "all"q
         port               = 9103
-    },
+    }/*,
     {
         map_key            = "additional2"
         target_group_name  = "2"
