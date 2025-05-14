@@ -12,7 +12,7 @@ module "alb_module" {
   alb_subnet_type   = "private"
   listener_configurations = [
     {
-      port_number        = n/a
+      port_number        = 443
       protocol           = "n/a"
       target_group_name  = "n/a"
       allow_ingress_from = ["n/a"]
@@ -36,7 +36,7 @@ module "alb_module" {
   target_group_configurations = [
     {
         target_group_name     = "n/a"
-        port     = n/a
+        port     = 7890
         target_type = "n/a"
         protocol = "n/a"
         stickiness = {
