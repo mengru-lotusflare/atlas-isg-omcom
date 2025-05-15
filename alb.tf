@@ -45,7 +45,7 @@ module "alb_module" {
             cookie_duration = 60
             type            = "lb_cookie"
         }
-        target_id = ""
+        target_id = "0.0.0.0.0"
     }/*,
     {
         target_group_name        = "TG2"
