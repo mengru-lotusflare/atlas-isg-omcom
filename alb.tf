@@ -43,7 +43,7 @@ module "alb_module" {
         stickiness = {
             cookie_enabled  = false
             cookie_duration = 0
-            type            = ""
+            type            = "lb_cookie"
         }
         target_id = ""
     }/*,
