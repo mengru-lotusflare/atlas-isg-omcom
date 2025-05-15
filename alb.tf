@@ -40,11 +40,11 @@ module "alb_module" {
         target_type = "ip"
         protocol = "HTTPS"
         stickiness = {
-            cookie_enabled  = true
-            cookie_duration = 60
-            type            = "lb_cookie"
+            cookie_enabled  = ""
+            cookie_duration = ""
+            type            = ""
         }
-        target_id = "10.220.193.70"
+        target_id = ""
     }/*,
     {
         target_group_name        = "TG2"
