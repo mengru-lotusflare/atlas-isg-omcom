@@ -39,12 +39,8 @@ module "alb_module" {
         port     = 7890
         target_type = "ip"
         protocol = "HTTPS"
-        stickiness = {
-            cookie_enabled  = ""
-            cookie_duration = ""
-            type            = ""
-        }
-        target_id = ""
+
+        target_id = "10.220.193.70"
     }/*,
     {
         target_group_name        = "TG2"
