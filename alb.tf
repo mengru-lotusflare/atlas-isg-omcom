@@ -42,7 +42,7 @@ module "alb_module" {
         protocol = "HTTPS"
         stickiness = {
             cookie_enabled  = false
-            cookie_duration = 0
+            cookie_duration = 1
             type            = "lb_cookie"
         }
         target_id = ""
