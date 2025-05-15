@@ -41,11 +41,11 @@ module "alb_module" {
         target_type = "ip"
         protocol = "HTTPS"
         stickiness = {
-            cookie_enabled  = true
-            cookie_duration = 60
-            type            = "lb_cookie"
+            cookie_enabled  = false
+            cookie_duration = 0
+            type            = ""
         }
-        target_id = "var.target_ips"
+        target_id = ""
     }/*,
     {
         target_group_name        = "TG2"
