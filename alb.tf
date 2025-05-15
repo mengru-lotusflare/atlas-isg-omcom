@@ -10,14 +10,13 @@ module "alb_module" {
 
   name              = "alb"
   alb_subnet_type   = "alb"
-#   listener_configurations = [
-#     {
-#       port_number        = 443
-#       protocol           = "HTTPS"
-#       target_group_name  = "TG1"
-#       allow_ingress_from = ["n/a"]
-#       allow_ingress_from = [""]
-#     },
+  listener_configurations = [
+    {
+      port_number        = 443
+      protocol           = "HTTPS"
+      target_group_name  = "TG1"
+      allow_ingress_from = [""]
+    }
 #     {
 #       port_number        = 80
 #       protocol           = "HTTPS"
@@ -104,5 +103,5 @@ module "alb_module" {
 #         target_id          = "i-084bfb8f894d58216"
 #         port               = 1112
 #     }
-#   ]
+  ]
 }
