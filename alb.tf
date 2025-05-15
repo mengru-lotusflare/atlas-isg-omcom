@@ -45,7 +45,7 @@ module "alb_module" {
             cookie_duration = 60
             type            = "lb_cookie"
         }
-        target_id = each.value
+        target_id = "var.target_ips"
     }/*,
     {
         target_group_name        = "TG2"
