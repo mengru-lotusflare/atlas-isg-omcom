@@ -28,19 +28,19 @@ module "keyspaces" {
         { 
           name = "name", 
           type = "text" 
-        }/*,
+        },
         { 
           name = "id",
           type = "uuid" 
-        },
+        }/*,
         {
           name = "address"
           type = "text"
-        },*/
+        }*/
       ]
       partition_keys = [
         { 
-          name = "name"
+          name = "id"
         }
       ]
       clustering_keys = [
@@ -48,12 +48,12 @@ module "keyspaces" {
           name = "name", 
           order_by = "ASC" 
         }
-      ]
+      ]/*
       static_columns = [
         {
-          name = "name"
+          name = "address"
         }
-      ]
+      ]*/
       ttl_status = "ENABLED"
       keyspaces_table_tags = {
         Environment = "dev"
