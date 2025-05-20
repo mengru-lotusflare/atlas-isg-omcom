@@ -10,6 +10,7 @@ module "aurora_module" {
 
   name               = "postgresql"
   instance_class     = "db.t4g.medium"
+  engine_version     = "14.15"
   /*allow_ingress_from = []
 
   enable_alarms = [
