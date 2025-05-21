@@ -38,4 +38,4 @@ spec:
               cpu: 0.5m
               memory: 256Mi
       imagePullSecrets:
-      - name: isg-omcom-dv-jfrog-secret 
+      - name: isg-omcom-dv-jfrog-secret
