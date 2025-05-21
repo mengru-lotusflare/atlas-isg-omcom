@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "com test",
+    "type": "object",
+    "properties": {
+      "imsi": { "type": "string" },
+      "msisdn": { "type": "string" },
+      "provisioning_type": { "type": "string" },
+      "brand": { "type": "string" },
+      "state": { "type": "string" },
+      "create_ts": { "type": "string" },
+      "last_updated_ts": { "type": "string" },
+      "error_description": { "type": "string" }
+    },
+    "required": ["imsi", "msisdn", "provisioning_type", "brand", "state", "create_ts", "last_updated_ts", "error_description"]
+  }
