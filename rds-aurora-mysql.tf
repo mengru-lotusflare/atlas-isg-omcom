@@ -66,10 +66,12 @@ instance_parameters = [
     {
       "name": "validate-password",
       "value": "FORCE_PLUS_PERMANENT"
+      "apply_method" = "pending-reboot"
     },
     {
       "name": "validate_password_length",
       "value": "15"
+      "apply_method" = "pending-reboot"
     }
 ]
 
