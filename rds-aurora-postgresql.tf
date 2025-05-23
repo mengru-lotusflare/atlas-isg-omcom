@@ -48,81 +48,32 @@ module "aurora_module" {
   
    instance_parameters = [
     {
-      "ParameterName": "validate_password_length",
-      "ParameterValue": "15",
-      "Description": "The minimum number of characters that validate_password requires passwords to have.",
-      "Source": "user",
-      "ApplyType": "dynamic",
-      "DataType": "integer",
-      "AllowedValues": "0-2147483647",
-      "IsModifiable": true,
-      "ApplyMethod": "pending-reboot"
+      "Name": "validate_password_length",
+      "Value": "15"
     },
     {
-      "ParameterName": "log_connections",
-      "ParameterValue": "1",
-      "Description": "Logs each successful connection.",
-      "Source": "user",
-      "ApplyType": "dynamic",
-      "DataType": "boolean",
-      "AllowedValues": "0,1",
-      "IsModifiable": true,
-      "ApplyMethod": "pending-reboot"
+      "Name": "log_connections",
+      "Value": "1"
     },
     {
-      "ParameterName": "log_disconnections",
-      "ParameterValue": "1",
-      "Description": "Logs end of a session, including duration.",
-      "Source": "user",
-      "ApplyType": "dynamic",
-      "DataType": "boolean",
-      "AllowedValues": "0,1",
-      "IsModifiable": true,
-      "ApplyMethod": "pending-reboot"
+      "Name": "log_disconnections",
+      "Value": "1"
     },
     {
-      "ParameterName": "log_error_verbosity",
-      "ParameterValue": "verbose",
-      "Description": "Sets the verbosity of logged messages.",
-      "Source": "user",
-      "ApplyType": "dynamic",
-      "DataType": "string",
-      "AllowedValues": "terse,default,verbose",
-      "IsModifiable": true,
-      "ApplyMethod": "pending-reboot"
+      "Name": "log_error_verbosity",
+      "Value": "verbose"
     },
     {
-      "ParameterName": "pgaudit.log",
-      "ParameterValue": "all",
-      "Description": "Specifies which classes of statements will be logged by session audit logging.",
-      "Source": "user",
-      "ApplyType": "dynamic",
-      "DataType": "list",
-      "AllowedValues": "ddl,function,misc,read,role,write,none,all,-ddl,-function,-misc,-read,-role,-write",
-      "IsModifiable": true,
-      "ApplyMethod": "pending-reboot"
+      "Name": "pgaudit.log",
+      "Value": "all",
     },
     {
-      "ParameterName": "pgaudit.role",
-      "ParameterValue": "rds_pgaudit",
-      "Description": "Specifies the master role to use for object audit logging.",
-      "Source": "user",
-      "ApplyType": "dynamic",
-      "DataType": "string",
-      "AllowedValues": "rds_pgaudit",
-      "IsModifiable": true,
-      "ApplyMethod": "pending-reboot"
+      "Name": "pgaudit.role",
+      "Value": "rds_pgaudit"
     },
     {
-      "ParameterName": "shared_preload_libraries",
-      "ParameterValue": "pgaudit,pg_stat_statements",
-      "Description": "Lists shared libraries to preload into server.",
-      "Source": "user",
-      "ApplyType": "static",
-      "DataType": "list",
-      "AllowedValues": "auto_explain,orafce,pgaudit,pglogical,pg_bigm,pg_cron,pg_hint_plan,pg_prewarm,pg_similarity,pg_stat_statements,pg_tle,pg_transport,plprofiler,plrust",
-      "IsModifiable": true,
-      "ApplyMethod": "pending-reboot"
+      "Name": "shared_preload_libraries",
+      "Value": "pgaudit,pg_stat_statements"
     }
   ]
 
