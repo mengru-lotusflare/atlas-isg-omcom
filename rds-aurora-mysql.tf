@@ -7,10 +7,10 @@ module "aurora_module_dno" {
     aws.route53     = aws.route53,
     aws.instance_scheduler = aws.instance_scheduler
   }
-  engine_version          = "8.0.40"
+  engine_version          = "8.0"
   instance_class          = "db.t4g.medium"
   name                    = "dno-portal"
-  parameter_group_name    = "aurora-mysql8.0"
+  #parameter_group_name    = "aurora-mysql8.0"
 
   use_default_schedule      = false
   #Stop instances from 12midnight - 5:59AM (Mon-Sat)
