@@ -9,7 +9,7 @@ module "aurora_module_dno" {
   }
   engine_version          = "8.0"
   instance_class          = "db.t4g.medium"
-  name                    = "dno-portal"
+  name                    = "dno_portal"
   #parameter_group_name    = "aurora-mysql8.0"
 
   use_default_schedule      = false
@@ -63,16 +63,16 @@ module "aurora_module_dno" {
         add_start_tag           = true
 
 instance_parameters = [
-    /*{
+    {
       "name": "validate-password",
       "value": "FORCE_PLUS_PERMANENT",
       "apply_method" = "pending-reboot"
-    },*/
+    }/*,
     {
       "name": "validate_password_length",
       "value": "15",
       "apply_method" = "pending-reboot"
-    }
+    }*/
 ]
 
 }

@@ -78,7 +78,7 @@ module "aurora_module_petal" {
       "value": "rds_pgaudit"
     },
     {
-      "apply_method": "immediate",
+      "apply_method" = "pending-reboot",
       "name": "shared_preload_libraries",
       "value": "pgaudit,pg_stat_statements"
     }
