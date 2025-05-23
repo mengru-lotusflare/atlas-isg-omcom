@@ -12,7 +12,7 @@ module "aurora_module_petal" {
   instance_class     = "db.r6g.large"
   engine_version     = "16.4"
   #parameter_group_name = "aurora-postgresql16"
-  database_name = "dno-petal-database-dev"
+  database_name = "dno-petal"
   /*allow_ingress_from = []
 
   enable_alarms = [
@@ -53,26 +53,32 @@ module "aurora_module_petal" {
       "value": "15"
     },
     {
+      "apply_method": "immediate",
       "name": "log_connections",
       "value": "1"
     },
     {
+      "apply_method": "immediate",
       "name": "log_disconnections",
       "value": "1"
     },
     {
+      "apply_method": "immediate",
       "name": "log_error_verbosity",
       "value": "verbose"
     },
     {
+      "apply_method": "immediate",
       "name": "pgaudit.log",
       "value": "all"
     },
     {
+      "apply_method": "immediate",
       "name": "pgaudit.role",
       "value": "rds_pgaudit"
     },
     {
+      "apply_method": "immediate",
       "name": "shared_preload_libraries",
       "value": "pgaudit,pg_stat_statements"
     }
