@@ -1,5 +1,5 @@
 module "aurora_module" {
-  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-rds-aurora-postgresql/aws"
+  source = "globe.pe.jfrog.io/hmd-terraform-local-dev__NSKB-1297/aws-rds-aurora-postgresql/aws"
 
   providers = {
     aws.security    = aws.security,
@@ -8,9 +8,11 @@ module "aurora_module" {
     aws.instance_scheduler = aws.instance_scheduler
   }
 
-  name               = "postgresql"
-  instance_class     = "db.t4g.medium"
-  engine_version     = "14.15"
+  name               = "globe-com-petal-dev"
+  instance_class     = "db.r6g.large"
+  engine_version     = "16.9"
+  parameter_group_name = "aurora-postgresql16"
+  database_name = "dno-petal-database-dev"
   /*allow_ingress_from = []
 
   enable_alarms = [
@@ -43,6 +45,86 @@ module "aurora_module" {
       value = "aurpsql-instance"
     }
   ]*/
+  
+   instance_parameters = [
+    {
+      "ParameterName": "validate_password_length",
+      "ParameterValue": "15",
+      "Description": "The minimum number of characters that validate_password requires passwords to have.",
+      "Source": "user",
+      "ApplyType": "dynamic",
+      "DataType": "integer",
+      "AllowedValues": "0-2147483647",
+      "IsModifiable": true,
+      "ApplyMethod": "pending-reboot"
+    },
+    {
+      "ParameterName": "log_connections",
+      "ParameterValue": "1",
+      "Description": "Logs each successful connection.",
+      "Source": "user",
+      "ApplyType": "dynamic",
+      "DataType": "boolean",
+      "AllowedValues": "0,1",
+      "IsModifiable": true,
+      "ApplyMethod": "pending-reboot"
+    },
+    {
+      "ParameterName": "log_disconnections",
+      "ParameterValue": "1",
+      "Description": "Logs end of a session, including duration.",
+      "Source": "user",
+      "ApplyType": "dynamic",
+      "DataType": "boolean",
+      "AllowedValues": "0,1",
+      "IsModifiable": true,
+      "ApplyMethod": "pending-reboot"
+    },
+    {
+      "ParameterName": "log_error_verbosity",
+      "ParameterValue": "verbose",
+      "Description": "Sets the verbosity of logged messages.",
+      "Source": "user",
+      "ApplyType": "dynamic",
+      "DataType": "string",
+      "AllowedValues": "terse,default,verbose",
+      "IsModifiable": true,
+      "ApplyMethod": "pending-reboot"
+    },
+    {
+      "ParameterName": "pgaudit.log",
+      "ParameterValue": "all",
+      "Description": "Specifies which classes of statements will be logged by session audit logging.",
+      "Source": "user",
+      "ApplyType": "dynamic",
+      "DataType": "list",
+      "AllowedValues": "ddl,function,misc,read,role,write,none,all,-ddl,-function,-misc,-read,-role,-write",
+      "IsModifiable": true,
+      "ApplyMethod": "pending-reboot"
+    },
+    {
+      "ParameterName": "pgaudit.role",
+      "ParameterValue": "rds_pgaudit",
+      "Description": "Specifies the master role to use for object audit logging.",
+      "Source": "user",
+      "ApplyType": "dynamic",
+      "DataType": "string",
+      "AllowedValues": "rds_pgaudit",
+      "IsModifiable": true,
+      "ApplyMethod": "pending-reboot"
+    },
+    {
+      "ParameterName": "shared_preload_libraries",
+      "ParameterValue": "pgaudit,pg_stat_statements",
+      "Description": "Lists shared libraries to preload into server.",
+      "Source": "user",
+      "ApplyType": "static",
+      "DataType": "list",
+      "AllowedValues": "auto_explain,orafce,pgaudit,pglogical,pg_bigm,pg_cron,pg_hint_plan,pg_prewarm,pg_similarity,pg_stat_statements,pg_tle,pg_transport,plprofiler,plrust",
+      "IsModifiable": true,
+      "ApplyMethod": "pending-reboot"
+    }
+  ]
 
   use_default_schedule      = false
   #Stop instances from 12midnight - 5:59AM (Mon-Sat)
@@ -90,5 +172,4 @@ module "aurora_module" {
         weekdays    = ["sat"]
     }
   ]
-
 }
