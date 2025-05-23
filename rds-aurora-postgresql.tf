@@ -11,7 +11,7 @@ module "aurora_module_petal" {
   name               = "globe-petal"
   instance_class     = "db.r6g.large"
   engine_version     = "16.4"
-  parameter_group_name = "aurora-postgresql16"
+  # parameter_group_name = "aurora-postgresql16"
   database_name = "dnopetal"
   /*allow_ingress_from = []
 
@@ -47,41 +47,41 @@ module "aurora_module_petal" {
   ]*/
   
    instance_parameters = [
-    {
-      "apply_method": "immediate",
-      "name": "validate_password_length",
-      "value": "15"
-    },
-    {
-      "apply_method": "immediate",
-      "name": "log_connections",
-      "value": "1"
-    },
-    {
-      "apply_method": "immediate",
-      "name": "log_disconnections",
-      "value": "1"
-    },
-    {
-      "apply_method": "immediate",
-      "name": "log_error_verbosity",
-      "value": "verbose"
-    },
-    {
-      "apply_method": "immediate",
-      "name": "pgaudit.log",
-      "value": "all"
-    },
-    {
-      "apply_method": "immediate",
-      "name": "pgaudit.role",
-      "value": "rds_pgaudit"
-    },
-    {
-      "apply_method": "pending-reboot",
-      "name": "shared_preload_libraries",
-      "value": "pgaudit,pg_stat_statements"
-    }
+    # {
+    #   "apply_method": "immediate",
+    #   "name": "validate_password_length",
+    #   "value": "15"
+    # },
+    # {
+    #   "apply_method": "immediate",
+    #   "name": "log_connections",
+    #   "value": "1"
+    # },
+    # {
+    #   "apply_method": "immediate",
+    #   "name": "log_disconnections",
+    #   "value": "1"
+    # },
+    # {
+    #   "apply_method": "immediate",
+    #   "name": "log_error_verbosity",
+    #   "value": "verbose"
+    # },
+    # {
+    #   "apply_method": "immediate",
+    #   "name": "pgaudit.log",
+    #   "value": "all"
+    # },
+    # {
+    #   "apply_method": "immediate",
+    #   "name": "pgaudit.role",
+    #   "value": "rds_pgaudit"
+    # },
+    # {
+    #   "apply_method": "pending-reboot",
+    #   "name": "shared_preload_libraries",
+    #   "value": "pgaudit,pg_stat_statements"
+    # }
   ]
 
   use_default_schedule      = false
