@@ -11,7 +11,7 @@ module "aurora_module_petal" {
   name               = "globe-petal"
   instance_class     = "db.r6g.large"
   engine_version     = "16.9"
-  parameter_group_name = "aurora-postgresql16"
+  #parameter_group_name = "aurora-postgresql16"
   database_name = "dno-petal-database-dev"
   /*allow_ingress_from = []
 
