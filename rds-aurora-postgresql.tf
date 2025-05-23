@@ -48,32 +48,32 @@ module "aurora_module" {
   
    instance_parameters = [
     {
-      "Name": "validate_password_length",
-      "Value": "15"
+      "name": "validate_password_length",
+      "value": "15"
     },
     {
-      "Name": "log_connections",
-      "Value": "1"
+      "name": "log_connections",
+      "value": "1"
     },
     {
-      "Name": "log_disconnections",
-      "Value": "1"
+      "name": "log_disconnections",
+      "value": "1"
     },
     {
-      "Name": "log_error_verbosity",
-      "Value": "verbose"
+      "name": "log_error_verbosity",
+      "value": "verbose"
     },
     {
-      "Name": "pgaudit.log",
-      "Value": "all",
+      "name": "pgaudit.log",
+      "value": "all"
     },
     {
-      "Name": "pgaudit.role",
-      "Value": "rds_pgaudit"
+      "name": "pgaudit.role",
+      "value": "rds_pgaudit"
     },
     {
-      "Name": "shared_preload_libraries",
-      "Value": "pgaudit,pg_stat_statements"
+      "name": "shared_preload_libraries",
+      "value": "pgaudit,pg_stat_statements"
     }
   ]
 
