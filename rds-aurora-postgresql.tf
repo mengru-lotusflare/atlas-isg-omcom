@@ -46,7 +46,7 @@ module "aurora_module_petal" {
     }
   ]*/
   
-   instance_parameters = [
+   #instance_parameters = [
     # {
     #   "apply_method": "immediate",
     #   "name": "validate_password_length",
@@ -82,7 +82,7 @@ module "aurora_module_petal" {
     #   "name": "shared_preload_libraries",
     #   "value": "pgaudit,pg_stat_statements"
     # }
-  ]
+  #]
 
   use_default_schedule      = false
   #Stop instances from 12midnight - 5:59AM (Mon-Sat)
