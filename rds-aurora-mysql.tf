@@ -1,4 +1,4 @@
-module "aurora_module" {
+module "aurora_module_dno" {
   source = "globe.pe.jfrog.io/hmd-terraform-local-dev__NSKB-1194/aws-rds-aurora-mysql/aws"
 
   providers = {

@@ -1,4 +1,4 @@
-module "aurora_module" {
+module "aurora_module_petal" {
   source = "globe.pe.jfrog.io/hmd-terraform-local-dev__NSKB-1297/aws-rds-aurora-postgresql/aws"
 
   providers = {
