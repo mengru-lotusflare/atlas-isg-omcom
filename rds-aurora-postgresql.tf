@@ -11,8 +11,8 @@ module "aurora_module_petal" {
   name               = "globe-petal"
   instance_class     = "db.r6g.large"
   engine_version     = "16.4"
-  #parameter_group_name = "aurora-postgresql16"
-  database_name = "dno-petal"
+  parameter_group_name = "aurora-postgresql16"
+  database_name = "dnopetal"
   /*allow_ingress_from = []
 
   enable_alarms = [
@@ -78,7 +78,7 @@ module "aurora_module_petal" {
       "value": "rds_pgaudit"
     },
     {
-      "apply_method" = "pending-reboot",
+      "apply_method": "pending-reboot",
       "name": "shared_preload_libraries",
       "value": "pgaudit,pg_stat_statements"
     }

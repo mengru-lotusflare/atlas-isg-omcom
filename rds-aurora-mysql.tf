@@ -9,8 +9,8 @@ module "aurora_module_dno" {
   }
   engine_version          = "8.0"
   instance_class          = "db.t4g.medium"
-  name                    = "globe-portal"
-  #parameter_group_name    = "aurora-mysql8.0"
+  name                    = "dno-portal"
+  parameter_group_name    = "aurora-mysql8.0"
 
   use_default_schedule      = false
   #Stop instances from 12midnight - 5:59AM (Mon-Sat)
