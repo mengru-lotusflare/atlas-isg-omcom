@@ -32,7 +32,7 @@ module "aurora_module_petal" {
   cluster_parameters                     = [
     {
       name  = "track_counts"
-      value = 0
+      value = null
 
     }
     # {
