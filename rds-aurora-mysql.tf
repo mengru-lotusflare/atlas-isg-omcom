@@ -62,14 +62,14 @@ module "aurora_module_dno" {
         add_stop_tag            = true
         add_start_tag           = true
 
-instance_parameters = [
-    # {
-    #   "name": "validate-password",
-    #   "value": "FORCE-PLUS-PERMANENT"
-    # },
-    # {
-    #   "name": "validate-password-length",
-    #   "value": "15"
-    # }
-]
+# instance_parameters = [
+#     {
+#       "name": "validate-password",
+#       "value": "FORCE-PLUS-PERMANENT"
+#     },
+#     {
+#       "name": "validate-password-length",
+#       "value": "15"
+#     }
+# ]
 }
