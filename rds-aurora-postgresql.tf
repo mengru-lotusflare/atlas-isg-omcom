@@ -10,8 +10,8 @@ module "aurora_module_petal" {
 
   name               = "globe-petal"
   instance_class     = "db.r6g.large"
-  engine_version     = "16.4"
-  parameter_group_name = "aurora-postgresql16"
+  engine_version     = "16"
+  # parameter_group_name = "aurora-postgresql16"
   # database_name = "dnopetal"
   # allow_ingress_from = []
 
@@ -29,17 +29,17 @@ module "aurora_module_petal" {
   # cloudwatch_metric_period               = 60 #seconds
   # allow_iam_read                         = ["prn::srcd2-showcase-sit-rt-role", "srcd2-showcase-sit-ingress-role"]
   # number_of_read_replicas                = 1 # Max 3 allowed
-  cluster_parameters                     = [
-    {
-      name  = "track_counts"
-      value = null
+  # cluster_parameters                     = [
+  #   {
+  #     name  = "track_counts"
+  #     value = null
 
-    }
-    # {
-    #   name  = "rds.log_retention_period"
-    #   value = "5400"
-    # }
-  ]
+  #   }
+  #   # {
+  #   #   name  = "rds.log_retention_period"
+  #   #   value = "5400"
+  #   # }
+  # ]
   # instance_parameters = [
   #   {
   #     name  = "application_name"
