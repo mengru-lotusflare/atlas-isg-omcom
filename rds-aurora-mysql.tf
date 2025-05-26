@@ -65,13 +65,11 @@ module "aurora_module_dno" {
 instance_parameters = [
     {
       "name": "validate-password",
-      "value": "FORCE-PLUS-PERMANENT",
-      "apply_method" = "pending-reboot"
+      "value": "FORCE-PLUS-PERMANENT"
     },
     {
       "name": "validate-password-length",
-      "value": "15",
-      "apply_method" = "pending-reboot"
+      "value": "15"
     }
 ]
 }
