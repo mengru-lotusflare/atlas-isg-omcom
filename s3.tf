@@ -8,7 +8,7 @@ module "s3_module" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "s3" # component_name
+  name = "reports" # component_name
 
   /*allow_iam_read = []
   allow_iam_write = []
@@ -135,4 +135,103 @@ module "s3_module" {
       ]
     }
   ]*/
+}
+
+
+module "s3_module" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
+
+  providers = {
+    aws.environment = aws.environment,
+    aws.security    = aws.security,
+    aws.dr          = aws.dr
+    aws.security_dr = aws.security_dr
+  }
+
+  name = "documents"
+
+}
+
+module "s3_module" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
+
+  providers = {
+    aws.environment = aws.environment,
+    aws.security    = aws.security,
+    aws.dr          = aws.dr
+    aws.security_dr = aws.security_dr
+  }
+
+  name = "billing-pdf"
+
+}
+
+module "s3_module" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
+
+  providers = {
+    aws.environment = aws.environment,
+    aws.security    = aws.security,
+    aws.dr          = aws.dr
+    aws.security_dr = aws.security_dr
+  }
+
+  name = "redshift-dt"
+
+}
+
+module "s3_module" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
+
+  providers = {
+    aws.environment = aws.environment,
+    aws.security    = aws.security,
+    aws.dr          = aws.dr
+    aws.security_dr = aws.security_dr
+  }
+
+  name = "data-import"
+
+}
+
+module "s3_module" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
+
+  providers = {
+    aws.environment = aws.environment,
+    aws.security    = aws.security,
+    aws.dr          = aws.dr
+    aws.security_dr = aws.security_dr
+  }
+
+  name = "polaris-file"
+
+}
+
+module "s3_module" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
+
+  providers = {
+    aws.environment = aws.environment,
+    aws.security    = aws.security,
+    aws.dr          = aws.dr
+    aws.security_dr = aws.security_dr
+  }
+
+  name = "creed-files"
+
+}
+
+module "s3_module" {
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
+
+  providers = {
+    aws.environment = aws.environment,
+    aws.security    = aws.security,
+    aws.dr          = aws.dr
+    aws.security_dr = aws.security_dr
+  }
+
+  name = "attachments"
+
 }
