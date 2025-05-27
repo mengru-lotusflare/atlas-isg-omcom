@@ -1,4 +1,4 @@
-module "s3_module" {
+module "s3_module_reports" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
 
   providers = {
@@ -138,7 +138,7 @@ module "s3_module" {
 }
 
 
-module "s3_module" {
+module "s3_module_documents" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
 
   providers = {
@@ -152,7 +152,7 @@ module "s3_module" {
 
 }
 
-module "s3_module" {
+module "s3_module_billing-pdf" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
 
   providers = {
@@ -166,7 +166,7 @@ module "s3_module" {
 
 }
 
-module "s3_module" {
+module "s3_module_redshift-dt" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
 
   providers = {
@@ -180,7 +180,7 @@ module "s3_module" {
 
 }
 
-module "s3_module" {
+module "s3_module_data-import" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
 
   providers = {
@@ -194,7 +194,7 @@ module "s3_module" {
 
 }
 
-module "s3_module" {
+module "s3_module_polaris-file" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
 
   providers = {
@@ -208,7 +208,7 @@ module "s3_module" {
 
 }
 
-module "s3_module" {
+module "s3_module_creed-files" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
 
   providers = {
@@ -222,7 +222,7 @@ module "s3_module" {
 
 }
 
-module "s3_module" {
+module "s3_module_attachments" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
 
   providers = {
