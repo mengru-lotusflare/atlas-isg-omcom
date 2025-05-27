@@ -7,8 +7,8 @@ module "elasticache_module_cluster_redis" {
     aws.route53     = aws.route53
   }
 
-  name                  = "redis"
-  node_type             = "cache.m5.xlarge"
+  name      = "redis"
+  node_type = "cache.m5.xlarge"
   /*cluster_mode_enabled  = true
   parameter_group_name  = "default.redis7"
   family                = "redis7"

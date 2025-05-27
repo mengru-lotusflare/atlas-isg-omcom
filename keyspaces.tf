@@ -6,7 +6,7 @@ module "keyspaces" {
     aws.environment = aws.environment
   }
 
-  name       = "comkeyspace"
+  name = "comkeyspace"
 
   replication_specification = {
     replication_strategy = "SINGLE_REGION"
@@ -25,30 +25,30 @@ module "keyspaces" {
       default_time_to_live          = 60
       point_in_time_recovery_status = "ENABLED"
       columns = [
-        { 
-          name = "name", 
-          type = "text" 
+        {
+          name = "name",
+          type = "text"
         },
-        { 
+        {
           name = "id",
-          type = "uuid" 
-        }/*,
+          type = "uuid"
+        } /*,
         {
           name = "address"
           type = "text"
         }*/
       ]
       partition_keys = [
-        { 
+        {
           name = "id"
         }
       ]
       clustering_keys = [
-        { 
-          name = "name", 
-          order_by = "ASC" 
+        {
+          name     = "name",
+          order_by = "ASC"
         }
-      ]/*
+      ] /*
       static_columns = [
         {
           name = "address"
@@ -59,7 +59,7 @@ module "keyspaces" {
         Environment = "dev"
         Owner       = "teamA"
       }
-    }/*,
+    } /*,
     {
       table_name = "requiredonly"
       columns = [
