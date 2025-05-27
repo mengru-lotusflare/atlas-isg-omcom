@@ -30,11 +30,11 @@ module "aurora_module_petal" {
   # allow_iam_read                         = ["prn::srcd2-showcase-sit-rt-role", "srcd2-showcase-sit-ingress-role"]
   # number_of_read_replicas                = 1 # Max 3 allowed
   cluster_parameters = [
-    {
-      name  = "Engine type"
-      value = "Aurora PostgreSQL"
+    # {
+    #   name  = "Engine type"
+    #   value = "Aurora PostgreSQL"
 
-    }
+    # }
     # {
     #   name  = "rds.log_retention_period"
     #   value = "5400"
@@ -42,11 +42,11 @@ module "aurora_module_petal" {
   ]
   instance_parameters = [
 
-      {
-      name  = "Engine type"
-      value = "Aurora PostgreSQL"
+    #   {
+    #   name  = "Engine type"
+    #   value = "Aurora PostgreSQL"
 
-    }
+    # }
     # {
     #   name  = "application_name"
     #   value = "aurpsql-instance"
