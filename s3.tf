@@ -166,7 +166,7 @@ module "s3_module_billing-pdf" {
 
 }
 
-module "s3_module_redshift-dt" {
+module "s3_module_redshift-da" {
   source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-s3/aws"
 
   providers = {
@@ -176,7 +176,7 @@ module "s3_module_redshift-dt" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "redshift-dt"
+  name = "redshift-da"
 
 }
 
