@@ -1,5 +1,5 @@
 module "aurora_module_petal" {
-  source = "globe.pe.jfrog.io/hmd-terraform-local-dev__NSKB-1297/aws-rds-aurora-postgresql/aws"
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-rds-aurora-postgresql/aws"
 
   providers = {
     aws.security           = aws.security,
