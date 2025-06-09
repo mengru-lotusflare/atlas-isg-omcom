@@ -18,13 +18,13 @@ module "ec2_module" {
   }
 
   #Path to zip file containing application deployment folder
-  #deployment_package_zip_path = "${path.root}/app.zip"
+  deployment_package_zip_path = "${path.root}/app.zip"
 
   #List of file paths to pipe logs to CloudWatch
-  #log_file_paths = [
-  #      "/var/log/myapp/app.log",
-  #      "/var/log/myapp/error.log"
-  #]
+  log_file_paths = [
+        "/var/omcom/app.log",
+        "/var/omcom/error.log"
+  ]
 
   # Specify if you want to use spot instance in launch template. If dont want to use spot instance skip this block.  
   
