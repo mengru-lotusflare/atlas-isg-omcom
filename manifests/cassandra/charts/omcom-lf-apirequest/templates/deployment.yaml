@@ -29,7 +29,7 @@ spec:
                 values:                                                                                                                                                                                   
                 - isg-omcom-dv-np-omcom # templatize this
       containers:
-        - image: globe.pe.jfrog.io/isg-omcom-docker-local-nonprod/
+        - image: globe.pe.jfrog.io/isg-omcom-docker-local-nonprod/lf-apirequest:master-2025-06-03-0944-89cb7a8
           imagePullPolicy: IfNotPresent
           name: lf-apirequest-container
         #   command: ["/bin/sh", "-c", "echo 'Forcing the container to run infinitely'; sleep infinity"]
