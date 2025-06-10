@@ -50,3 +50,27 @@ variable "s3_com8" {
     description = "Name for s3"
     type = string
 }
+
+#ELASTICACHE VALKEY
+variable "valkey" {
+    description = "Name for Elasticache Valkey"
+    type = string
+}
+
+#Keyspaces
+variable "keyspaces" {
+    description = "Name for Keyspaces"
+    type = string
+}
+
+#Aurora DB MySQL
+variable "aurora_module_dno" {
+    description = "Name for Aurora DB MySQL"
+    type = string
+}
+
+#Aurora Postgresql
+variable "aurora_module_petal" {
+    description = "Name for Aurora Postgresql"
+    type = string
+}

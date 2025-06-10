@@ -8,7 +8,7 @@ module "aurora_module_petal" {
     aws.instance_scheduler = aws.instance_scheduler
   }
 
-  name                 = "globe-petal"
+  name                 = var.aurora_module_petal
   instance_class       = "db.r6g.large"
   engine_version       = "16.4"
   parameter_group_name = "aurora-postgresql16"

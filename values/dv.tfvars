@@ -13,3 +13,15 @@ s3_com5                      = "data-import"
 s3_com6                      = "polaris-file"
 s3_com7                      = "creed-files"
 s3_com8                      = "attachments"
+
+#elasticache-valkey
+valkey                       = "com-valkey"
+
+#keyspaces
+keyspaces                    = "comkeyspace"
+
+#aurora db mysql
+aurora_module_dno            = "dno-portal"
+
+#aurora db mysql
+aurora_module_petal          = "globe-petal"

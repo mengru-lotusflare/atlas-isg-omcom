@@ -6,7 +6,7 @@ module "keyspaces" {
     aws.environment = aws.environment
   }
 
-  name = "comkeyspace"
+  name = var.keyspaces
 
   replication_specification = {
     replication_strategy = "SINGLE_REGION"
