@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-deploy-lf-apirequest
+  name: test-deploy-lf-scala
   labels:
-    name: test-deploy-lf-apirequest
+    name: test-deploy-lf-scala
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: test-deploy-lf-apirequest
+      app: test-deploy-lf-scala
   template:
     metadata:
       labels:
-        app: test-deploy-lf-apirequest
+        app: test-deploy-lf-scala
     spec:
       imagePullSecrets:
       - name: isg-omcom-dv-jfrog-secret
