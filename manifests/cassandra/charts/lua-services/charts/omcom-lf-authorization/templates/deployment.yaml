@@ -5,7 +5,7 @@ metadata:
   labels:
     name: test-deploy-lf-authorization
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: test-deploy-lf-authorization
