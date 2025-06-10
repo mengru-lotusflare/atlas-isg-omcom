@@ -1,44 +1,25 @@
 module "ec2_module" {
-  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-ec2/aws"
-
+  source = "globe.pe.jfrog.io/hmd-terraform-local__service/aws-ec2-basic/aws"
   providers = {
     aws.environment = aws.environment
     aws.security    = aws.security
     aws.route53     = aws.route53
   }
-
   name = "ec2"
   is_public = false
+  instance_type  = "t3.large"
+  subnet_type = "ec2"
 
-  # uses workload AMI
   ami = {
-    name = "app1" # ami name as defined in projects
-    build = "1"
-    type = "al2"
+  is_soe = false
+  name = "10.220.146.192"
+  build = 49
   }
 
-  #Path to zip file containing application deployment folder
-  deployment_package_zip_path = "${path.root}/app.zip"
+  custom_ami_owner = "337994588368"
+  private_ip_address = "10.220.146.192"
+  ec2_subnet_name = "EC2-PRI-AZA-DEV-COM-SUB03"
+  deployment_package_zip_path = null
+  log_file_paths = []
 
-  #List of file paths to pipe logs to CloudWatch
-  log_file_paths = [
-        "/var/omcom/app.log",
-        "/var/omcom/error.log"
-  ]
-
-  # Specify if you want to use spot instance in launch template. If dont want to use spot instance skip this block.  
-  
- #  max_price - The maximum hourly price you're willing to pay for the Spot Instances.
- 
-  #instance_market_options = [
-  #{
-  # market_type = "spot"
-  #  spot_options = [
-  #    {
-  #      max_price = 0.02
-  #    }
-  #  ]
-  #}
-#]
-
-}
+} 
