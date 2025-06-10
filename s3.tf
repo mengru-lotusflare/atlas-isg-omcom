@@ -8,7 +8,7 @@ module "s3_module_reports" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "reports" # component_name
+  name = var.s3_com1 # component_name
 
   /*allow_iam_read = []
   allow_iam_write = []
@@ -148,7 +148,7 @@ module "s3_module_documents" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "documents"
+  name = var.s3_com2
 
 }
 
@@ -162,7 +162,7 @@ module "s3_module_billing-pdf" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "billing-pdf"
+  name = var.s3_com3
 
 }
 
@@ -176,7 +176,7 @@ module "s3_module_redshift-da" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "redshift-da"
+  name = var.s3_com4
 
 }
 
@@ -190,7 +190,7 @@ module "s3_module_data-import" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "data-import"
+  name = var.s3_com5
 
 }
 
@@ -204,7 +204,7 @@ module "s3_module_polaris-file" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "polaris-file"
+  name = var.s3_com6
 
 }
 
@@ -218,7 +218,7 @@ module "s3_module_creed-files" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "creed-files"
+  name = var.s3_com7
 
 }
 
@@ -232,6 +232,6 @@ module "s3_module_attachments" {
     aws.security_dr = aws.security_dr
   }
 
-  name = "attachments"
+  name = var.s3_com8
 
 }
