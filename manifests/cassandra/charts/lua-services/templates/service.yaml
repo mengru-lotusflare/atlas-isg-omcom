@@ -1,12 +1,17 @@
+{{- range $name, $chart := .Values }}
+{{- if (hasKey $chart "service") }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ $name }}
   labels:
-    app: {{ .Chart.Name }}
+    app: {{ $name }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ $chart.service.type }}
   ports:
-{{ toYaml .Values.service.ports | indent 4 }}
+{{ toYaml $chart.service.ports | indent 4 }}
   selector:
-    app: {{ .Chart.Name }}
+    app: {{ $name }}
+---
+{{- end }}
+{{- end }}
