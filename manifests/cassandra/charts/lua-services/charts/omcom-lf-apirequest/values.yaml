@@ -31,7 +31,7 @@ service:
 
 env:
   tz: Asia/Jakarta
-
+  
 autoscaling:
   enabled: true
   minReplicas: 1
