@@ -1,7 +1,7 @@
 replicaCount: 2
 
 service: 
-  type: ClusterIP
+  type: NodePort
   ports: 
     - protocol: TCP
       port: 8080
