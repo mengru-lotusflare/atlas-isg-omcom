@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lf-lua-services-lf-apirequest
+  labels:
+    name: lf-lua-services-lf-apirequest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lf-lua-services-lf-apirequest
+  template:
+    metadata:
+      labels:
+        app: lf-lua-services-lf-apirequest
+    spec:
+      imagePullSecrets:
+      - name: isg-omcom-dv-jfrog-secret
+      containers:
+      - name: {{ .Chart.Name }}
+        image: globe.pe.jfrog.io/hmd-dockerhub/jonlabelle/network-tools:latest
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh", "-c", "echo 'Forcing the container to run infinitely'; sleep infinity"]
+        resources:
+          limits:
+            cpu: 0.5m
+            memory: 256Mi
+        # ports:
+        # - name: http
+        #   containerPort: 8080
+        #   protocol: TCP
+        # resources:
+        #   requests:
+        #     cpu: 200m
+        #     memory: 500Mi
+        #   limits:
+        #     cpu: 2
+        #     memory:
+        env:
+        - name: TZ
+          value: Asia/Jakarta
+
