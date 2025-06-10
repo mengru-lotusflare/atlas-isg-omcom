@@ -19,7 +19,6 @@ private_ip_address = {
 
 ##ValueEC2
 name1 = "ec2"
-instance_type  = "t2.micro"
 ami = {
   is_soe = false
   name = "node"
