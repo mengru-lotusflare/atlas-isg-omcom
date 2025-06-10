@@ -5,15 +5,21 @@ module "ec2_module" {
     aws.security    = aws.security
     aws.route53     = aws.route53
   }
-  name = var.name1
+  name = "ec2"
   is_public = false
-  instance_type  = var.instance_type
-  subnet_type = var.ec2_subnet_type
-  ami = var.ami
-  custom_ami_owner = var.custom_ami_owner
-  private_ip_address = var.private_ip_address["node1"]
-  ec2_subnet_name = var.ec2_subnet_name["sub1"]
-  deployment_package_zip_path = var.deployment_package_zip_path
-  log_file_paths = var.log_file_paths
+  instance_type  = "t3.large"
+  subnet_type = "ec2"
+
+  ami = {
+  is_soe = false
+  name = "10.220.146.192/28"
+  build = 49
+  }
+
+  custom_ami_owner = "337994588368"
+  private_ip_address = var.private_ip_address["10.220.146.192/28"]
+  ec2_subnet_name = var.ec2_subnet_name["EC2-PRI-AZA-DEV-COM-SUB03"]
+  deployment_package_zip_path = null
+  log_file_paths = []
 
 } 
