@@ -1,0 +1,43 @@
+#----------------------------------------------------------------#
+#-------------------- AWS SECRET MANAGER ------------------------#
+#----------------------------------------------------------------#
+
+appSecretManager: isg/omcom/dv/cassandra/app/lua/secret-sm
+
+appSecrets:
+  - secretKey: com_lotusflare_dno_braintree_prod_base_url
+    secretManagerKey: com.lotusflare.dno.braintree_prod.base_url
+  - secretKey: com_lotusflare_dno_braintree_prod_merchant_id
+    secretManagerKey: com.lotusflare.dno.braintree_prod.merchant_id
+  - secretKey: com_lotusflare_dno_braintree_prod_private_key
+    secretManagerKey: com.lotusflare.dno.braintree_prod.private_key
+  - secretKey: com_lotusflare_dno_braintree_prod_protocol
+    secretManagerKey: com.lotusflare.dno.braintree_prod.protocol
+  - secretKey: com_lotusflare_dno_braintree_prod_public_key
+    secretManagerKey: com.lotusflare.dno.braintree_prod.public_key
+  - secretKey: com_lotusflare_dno_deepio_app
+    secretManagerKey: com.lotusflare.dno.deepio.app
+  - secretKey: com_lotusflare_dno_deepio_app_privatekey
+    secretManagerKey: com.lotusflare.dno.deepio.app.privatekey
+  - secretKey: com_lotusflare_dno_dispatcher_fcm_project_id
+    secretManagerKey: com.lotusflare.dno.dispatcher.fcm.project.id
+  - secretKey: com_lotusflare_dno_dispatcher_service_account_json_file_content
+    secretManagerKey: com.lotusflare.dno.dispatcher.service.account.json.file.content
+  - secretKey: com_lotusflare_dno_idp_client_id
+    secretManagerKey: com.lotusflare.dno.idp.client_id
+  - secretKey: com_lotusflare_dno_idp_client_secret
+    secretManagerKey: com.lotusflare.dno.idp.client_secret
+  - secretKey: com_lotusflare_dno_okta_address
+    secretManagerKey: com.lotusflare.dno.okta.address
+  - secretKey: com_lotusflare_dno_okta_valid_client_ids
+    secretManagerKey: com.lotusflare.dno.okta.valid_client_ids
+  - secretKey: com_lotusflare_dno_opensearch_cluster
+    secretManagerKey: com.lotusflare.dno.opensearch.cluster
+  - secretKey: com_lotusflare_dno_opensearch_master_password
+    secretManagerKey: com.lotusflare.dno.opensearch.master_password
+  - secretKey: com_lotusflare_dno_opensearch_master_username
+    secretManagerKey: com.lotusflare.dno.opensearch.master_username
+  - secretKey: com_lotusflare_dno_opensearch_token
+    secretManagerKey: com.lotusflare.dno.opensearch.token
+  - secretKey: com_lotusflare_dno_opensearch_url
+    secretManagerKey: com.lotusflare.dno.opensearch.url

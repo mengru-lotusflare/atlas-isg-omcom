@@ -1,0 +1,5 @@
+apiVersion: v2
+name: omcom-lf-apirequest
+description: A Helm chart for OMCOM API Request Microservice
+type: application
+version: 0.1.0
