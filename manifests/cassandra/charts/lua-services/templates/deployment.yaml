@@ -15,7 +15,7 @@ spec:
         app: test-deploy
     spec:
       imagePullSecrets:
-      - isg-omcom-dv-jfrog-secret
+      - name: isg-omcom-dv-jfrog-secret
       containers:
       - name: {{ .Chart.Name }}
         image: globe.pe.jfrog.io/hmd-dockerhub/jonlabelle/network-tools:latest
