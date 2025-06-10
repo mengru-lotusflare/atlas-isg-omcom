@@ -2,6 +2,7 @@
 global:
   appPrefix: isg-omcom-cassandra-lua
   appEnv: dv
+  appName: isg-omcom
   externalSecretName: external-secrets
   secretName: omcom-lua-app-secret
 
@@ -16,9 +17,13 @@ env:
 omcom-lf-authorization:
   container:
     image:
-      tag: "0.1.0"
+      repository: globe.pe.jfrog.io/hmd-dockerhub/jonlabelle/network-tools
+      # tag: "0.1.0"
+      tag: latest
 
 omcom-lf-apirequest:
   container:
     image:
-      tag: "0.1.0"
+      repository: globe.pe.jfrog.io/hmd-dockerhub/jonlabelle/network-tools
+      # tag: "0.1.0"
+      tag: latest

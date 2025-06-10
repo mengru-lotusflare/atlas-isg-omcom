@@ -16,6 +16,8 @@ spec:
         namespec: omcom-internal
         {{- include "service.selectorLabels" . | nindent 8 }}
     spec:
+      imagePullSecrets:
+      - name: {{ .Values.global.appName }}-{{ .Values.global.appEnv }}-jfrog-secret
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
