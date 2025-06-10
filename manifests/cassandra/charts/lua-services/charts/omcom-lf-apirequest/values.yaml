@@ -5,7 +5,7 @@ container:
     repository: globe.pe.jfrog.io/isg-gpayo-docker-local-nonprod/dv/gpayo-cms-frontend# Add apirequest specific overrides here
 
 # Default values for omcom-lf-apirequest
-replicaCount: 1
+replicaCount: 2
 nameOverride: ""
 fullnameOverride: ""
 

@@ -1,5 +1,5 @@
 # Default values for omcom-lf-authorization
-replicaCount: 1
+replicaCount: 3
 
 image:
   repository: your-registry/omcom-lf-authorization
