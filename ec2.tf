@@ -17,8 +17,8 @@ module "ec2_module" {
   }
 
   custom_ami_owner = "337994588368"
-  private_ip_address = var.private_ip_address["10.220.146.192/28"]
-  ec2_subnet_name = var.ec2_subnet_name["EC2-PRI-AZA-DEV-COM-SUB03"]
+  private_ip_address = 10.220.146.192/28
+  ec2_subnet_name = "EC2-PRI-AZA-DEV-COM-SUB03"
   deployment_package_zip_path = null
   log_file_paths = []
 
