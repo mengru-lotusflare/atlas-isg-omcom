@@ -1,5 +1,5 @@
 apiVersion: v2
-name: isg-omcom-cassandra
+name: isg-omcom-cassandra-subcharts
 description: Helm chart for ISG OMCOM CassandraServices
 version: 0.1.0
 appVersion: "1.0"
