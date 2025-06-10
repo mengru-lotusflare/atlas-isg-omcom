@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-deploy-lf-authorization
+  name: test-deploy-lf-cassandra
   labels:
-    name: test-deploy-lf-authorization
+    name: test-deploy-lf-cassandra
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: test-deploy-lf-authorization
+      app: test-deploy-lf-cassandra
   template:
     metadata:
       labels:
-        app: test-deploy-lf-authorization
+        app: test-deploy-lf-cassandra
     spec:
       imagePullSecrets:
       - name: isg-omcom-dv-jfrog-secret

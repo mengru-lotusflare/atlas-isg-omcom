@@ -1,5 +1,0 @@
-apiVersion: v2
-name: isg-omcom-lua-services
-description: Helm chart for ISG OMCOM Lua Services
-version: 0.1.0
-appVersion: "1.0"
