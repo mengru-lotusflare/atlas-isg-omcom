@@ -1,0 +1,211 @@
+---
+# Source: isg-omcom-lua-services/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: omcom-lf-apirequest
+  labels:
+    app: isg-omcom-lua-services
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: isg-omcom-lua-services
+---
+# Source: isg-omcom-lua-services/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omcom-lf-apirequest-isg-omcom-lua-services-deploy
+  labels:
+    helm.sh/chart: isg-omcom-lua-services-0.1.0
+    app.kubernetes.io/name: isg-omcom-lua-services
+    app.kubernetes.io/instance: omcom-lf-apirequest
+    app.kubernetes.io/version: "1.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: isg-omcom-lua-services
+  template:
+    metadata:
+      labels:
+        app: isg-omcom-lua-services
+        namespec: omcom-internal
+        app.kubernetes.io/name: isg-omcom-lua-services
+        app.kubernetes.io/instance: omcom-lf-apirequest
+    spec:
+      containers:
+      - name: isg-omcom-lua-services
+        image: "your-registry/omcom-lf-apirequest:0.1.0"
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 200m
+            memory: 256Mi
+        env:
+        - name: TZ
+          value: "Asia/Jakarta"
+---
+# Source: isg-omcom-lua-services/templates/network.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-utility
+  labels:
+   app: network-utility-container
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: network-utility-container
+  template:
+    metadata:
+      labels:
+        app: network-utility-container
+    spec:
+      # tolerations:                                                                                                                                                                                        
+      # - effect: NoSchedule                                                                                                                                                                                
+      #   key: karpenter.sh/nodepool                                                                                                                                                                        
+      #   operator: Equal                                                                                                                                                                                   
+      #   value: isg-atlas-dv-np-atlas
+      # # affinity:                                                                                                                                                                                           
+      #   nodeAffinity:                                                                                                                                                                                     
+      #     requiredDuringSchedulingIgnoredDuringExecution:                                                                                                                                                 
+      #       nodeSelectorTerms:                                                                                                                                                                            
+      #       - matchExpressions:                                                                                                                                                                           
+      #         - key: karpenter.sh/nodepool                                                                                                                                                                
+      #           operator: In                                                                                                                                                                              
+      #           values:                                                                                                                                                                                   
+      #           - isg-atlas-dv-np-atlas
+      containers:
+        - image: globe.pe.jfrog.io/hmd-dockerhub/jonlabelle/network-tools
+          imagePullPolicy: IfNotPresent
+          name: network-utility-container
+          command: ["/bin/sh", "-c", "echo 'Forcing the container to run infinitely'; sleep infinity"]
+          resources:
+            limits:
+              cpu: 0.5m
+              memory: 256Mi
+      imagePullSecrets:
+      - name: isg-omcom-dv-jfrog-secret
+---
+# Source: isg-omcom-lua-services/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: omcom-lf-apirequest
+  labels:
+    app: isg-omcom-lua-services
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: omcom-lf-apirequest
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+---
+# Source: isg-omcom-lua-services/templates/externalSecrets.yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: isg-omcom-cassandra-lua-dv-external-secrets
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: isg-omcom-cassandra-lua-dv-secret-store
+    kind: SecretStore
+  target:
+    name: isg-omcom-cassandra-lua-dv-app-secret-env
+    creationPolicy: Owner
+  data:
+  - secretKey: com_lotusflare_dno_braintree_prod_base_url
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.braintree_prod.base_url
+  - secretKey: com_lotusflare_dno_braintree_prod_merchant_id
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.braintree_prod.merchant_id
+  - secretKey: com_lotusflare_dno_braintree_prod_private_key
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.braintree_prod.private_key
+  - secretKey: com_lotusflare_dno_braintree_prod_protocol
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.braintree_prod.protocol
+  - secretKey: com_lotusflare_dno_braintree_prod_public_key
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.braintree_prod.public_key
+  - secretKey: com_lotusflare_dno_deepio_app
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.deepio.app
+  - secretKey: com_lotusflare_dno_deepio_app_privatekey
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.deepio.app.privatekey
+  - secretKey: com_lotusflare_dno_dispatcher_fcm_project_id
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.dispatcher.fcm.project.id
+  - secretKey: com_lotusflare_dno_dispatcher_service_account_json_file_content
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.dispatcher.service.account.json.file.content
+  - secretKey: com_lotusflare_dno_idp_client_id
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.idp.client_id
+  - secretKey: com_lotusflare_dno_idp_client_secret
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.idp.client_secret
+  - secretKey: com_lotusflare_dno_okta_address
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.okta.address
+  - secretKey: com_lotusflare_dno_okta_valid_client_ids
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.okta.valid_client_ids
+  - secretKey: com_lotusflare_dno_opensearch_cluster
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.opensearch.cluster
+  - secretKey: com_lotusflare_dno_opensearch_master_password
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.opensearch.master_password
+  - secretKey: com_lotusflare_dno_opensearch_master_username
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.opensearch.master_username
+  - secretKey: com_lotusflare_dno_opensearch_token
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.opensearch.token
+  - secretKey: com_lotusflare_dno_opensearch_url
+    remoteRef:
+      key: isg/omcom/dv/cassandra/app/lua/secret-sm
+      property: com.lotusflare.dno.opensearch.url

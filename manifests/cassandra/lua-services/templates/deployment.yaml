@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "service.fullname" . }}-deploy
+  labels:
+    {{- include "service.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "service.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "service.name" . }}
+        namespec: omcom-internal
+        {{- include "service.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        env:
+        - name: TZ
+          value: {{ .Values.env.tz | quote }}
+        {{- with .Values.global.env }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}

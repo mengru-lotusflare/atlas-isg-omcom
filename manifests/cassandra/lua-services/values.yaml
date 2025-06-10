@@ -1,0 +1,24 @@
+# Global values shared between subcharts
+global:
+  appPrefix: isg-omcom-cassandra-lua
+  appEnv: dv
+  externalSecretName: external-secrets
+  secretName: omcom-lua-app-secret
+
+# Default environment variables for all services
+env:
+  - name: VCPU_CORES
+    valueFrom:
+      resourceFieldRef:
+        resource: limits.cpu
+
+# Service configurations
+omcom-lf-authorization:
+  container:
+    image:
+      tag: "0.1.0"
+
+omcom-lf-apirequest:
+  container:
+    image:
+      tag: "0.1.0"
