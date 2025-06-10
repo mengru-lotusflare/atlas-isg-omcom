@@ -7,7 +7,7 @@ module "elasticache_serverless_valkey_pooled" {
     aws.security    = aws.security
   }
 
-  name = var.valkey_name
+  name = var.valkey
   engine = "valkey"
 #   daily_snapshot_time  = "20:00" # It only support UTC and in a time format of HH:MM format (24-hour clock)
     major_engine_version = "8"
