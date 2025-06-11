@@ -22,7 +22,7 @@ module "ec2_standalone_module" {
   security_configurations = []
 
   is_public     = false
-  subnet_type   = "ec2"
+  subnet_type   = "redshift"
   instance_type = "t3.medium"
 
   #Option to add deployment.zip file for the Application Deployment
