@@ -1,42 +1,86 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-deploy-lf-lua
+  name: {{ include "app.fullname" . }}
+  annotations:
+    {{- toYaml .Values.annotations | nindent 4 }}
   labels:
-    name: test-deploy-lf-lua
+    {{- include "app.labels" . | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: test-deploy-lf-lua
+      {{- include "app.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: test-deploy-lf-lua
+        {{- include "app.selectorLabels" . | nindent 8 }}
+        {{- include "app.tag" . | nindent 8 }}
+        {{- include "app.ownerLabel" . | nindent 8 }}
+        {{- if .Values.podLabels }}
+        {{- toYaml .Values.podLabels | nindent 8 }}
+        {{- end }}
     spec:
-      imagePullSecrets:
-      - name: isg-omcom-dv-jfrog-secret
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: {{ include "app.fullname" . }}
+        {{- if .Values.config.external_secret.enabled }}
+        - name: external-secret-volume
+          secret:
+            secretName: {{ include "app.fullname" . }}-secret
+        {{- end }}
       containers:
-      - name: {{ .Chart.Name }}
-        image: globe.pe.jfrog.io/hmd-dockerhub/jonlabelle/network-tools:latest
-        imagePullPolicy: IfNotPresent
-        command: ["/bin/sh", "-c", "echo 'Forcing the container to run infinitely'; sleep infinity"]
-        resources:
-          limits:
-            cpu: 0.5m
-            memory: 256Mi
-        # ports:
-        # - name: http
-        #   containerPort: 8080
-        #   protocol: TCP
-        # resources:
-        #   requests:
-        #     cpu: 200m
-        #     memory: 500Mi
-        #   limits:
-        #     cpu: 2
-        #     memory:
-        env:
-        - name: TZ
-          value: Asia/Jakarta
+        - name: {{ include "app.name" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+            - name: config-volume
+              mountPath: /mnt/lua/config.lua
+              subPath: config.lua
+              readOnly: true
+            {{- if .Values.config.external_secret.enabled }}
+            - name: external-secret-volume
+              mountPath: /mnt/lua/secrets.lua
+              subPath: secrets.lua
+              readOnly: true
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: K8S_POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: K8S_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: IMAGE_TAG
+              value: {{ .Values.image.tag | quote }}
+            {{- if .Values.env }}
+            {{- toYaml .Values.env | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.containerPort }}
+          livenessProbe:
+          {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+          {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- if .Values.startupProbe }}
+          startupProbe:
+          {{- toYaml .Values.startupProbe | nindent 12 }}
+          {{- end }}
+          {{- with .Values.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
 
