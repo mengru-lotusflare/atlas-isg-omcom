@@ -1,17 +1,39 @@
-{{- range $name, $chart := .Values }}
-{{- if (hasKey $chart "service") }}
+{{- range $chartName, $chart := .Subcharts }}
+{{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
+{{- $serviceType := $.Values.serviceDefaults.type }}
+{{- $servicePort := $.Values.serviceDefaults.port }}
+{{- $serviceTargetPort := $.Values.serviceDefaults.targetPort }}
+{{- $serviceProtocol := $.Values.serviceDefaults.protocol }}
+{{- $servicePortName := $.Values.serviceDefaults.portName }}
+
+{{- if $chart.Values.service }}
+{{- if $chart.Values.service.type }}{{ $serviceType = $chart.Values.service.type }}{{ end }}
+{{- if $chart.Values.service.port }}{{ $servicePort = $chart.Values.service.port }}{{ end }}
+{{- if $chart.Values.service.targetPort }}{{ $serviceTargetPort = $chart.Values.service.targetPort }}{{ end }}
+{{- if $chart.Values.service.protocol }}{{ $serviceProtocol = $chart.Values.service.protocol }}{{ end }}
+{{- if $chart.Values.service.portName }}{{ $servicePortName = $chart.Values.service.portName }}{{ end }}
+{{- end }}
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $name }}
+  name: {{ $appName }}
   labels:
-    app: {{ $name }}
+    app.kubernetes.io/name: {{ $appName }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app: {{ $appName }}
+  {{- with $.Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  type: {{ $chart.service.type }}
+  type: {{ $serviceType }}
   ports:
-{{ toYaml $chart.service.ports | indent 4 }}
+    - port: {{ $servicePort }}
+      targetPort: {{ $serviceTargetPort }}
+      protocol: {{ $serviceProtocol }}
+      name: {{ $servicePortName }}
   selector:
-    app: {{ $name }}
----
-{{- end }}
+    app: {{ $appName }}
 {{- end }}

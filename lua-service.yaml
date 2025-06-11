@@ -1,0 +1,18 @@
+---
+# Source: isg-omcom-cassandra-lua-services/templates/external-secrets.yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  # name: --
+  name: isg-omcom-cassandra-lua-dv-ext-store
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    # name: --secret-store
+    name: isg-omcom-dv-secret-store # make this as dynamic (this is env-specific name)
+    kind: SecretStore
+  target:
+    # name: --app-secret
+    name: isg-omcom-cassandra-lua-services-app-secret
+    creationPolicy: Owner
+  data:

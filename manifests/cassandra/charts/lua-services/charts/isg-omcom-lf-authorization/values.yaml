@@ -1,8 +1,17 @@
-replicaCount: 2
-
-service: 
-  type: NodePort
-  ports: 
-    - protocol: TCP
-      port: 8080
-      targetPort: 8080
+# Application specific deployment configuration
+application:
+deployment:
+  replicaCount: 1
+  image:
+    repository: 637423436902.dkr.ecr.ap-southeast-1.amazonaws.com/isg-omcom/lf-images/lf-authorization
+    tag: master-2025-06-09-2000-e369c06
+    pullPolicy: IfNotPresent
+  containerPort: 8080
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  env: []
