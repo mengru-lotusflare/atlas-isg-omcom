@@ -1,2 +1,10 @@
 global:
   appName: isg-omcom
+
+service:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
