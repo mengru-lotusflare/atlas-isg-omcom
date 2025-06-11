@@ -12,11 +12,11 @@ module "ec2_standalone_module" {
   # private_ip_address = "10.220.140.195"
 
   # uses workload AMI
-#   ami = {
-#     is_soe = false
-#     name   = "nginx"
-#     build  = 35 # Enter value
-#   }
+  ami = {
+    is_soe = true
+    name   = "atlas-amazonlinux2"
+    build  = 147 # Enter value
+  }
 
   #Allocate multiple security rules
   security_configurations = []
