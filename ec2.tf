@@ -7,7 +7,7 @@ module "ec2_standalone_module" {
     aws.route53     = aws.route53
   }
 
-  name = "ec2-cassandra" # Enter value
+  name = "cassandra" # Enter value
 
   # private_ip_address = "10.220.140.195"
 
