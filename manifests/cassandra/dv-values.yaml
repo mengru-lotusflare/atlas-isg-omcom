@@ -1,2 +1,8 @@
 global:
   appName: isg-omcom
+
+lua-services:
+  appSecretManager: isg/omcom/dv/cassandra/app/lua/secret-sm
+  appSecrets:
+    - secretKey: com_lotusflare_dno_braintree_prod_base_url
+      secretManagerKey: com.lotusflare.dno.braintree_prod.base_url
