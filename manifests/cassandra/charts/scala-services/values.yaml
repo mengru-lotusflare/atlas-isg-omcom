@@ -7,3 +7,23 @@ service:
   portName: http
   targetPort: 8080
   protocol: tcp
+
+deployment:
+  replicaCount: 1
+  image:
+    repository: your-account-id.dkr.ecr.us-west-2.amazonaws.com/isg-omcom-scala-service
+    tag: "latest"
+    pullPolicy: Always
+  containerPort: 8080
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  config:
+    external_secret:
+      enabled: false
+  env: []
+  lifecycle: {}

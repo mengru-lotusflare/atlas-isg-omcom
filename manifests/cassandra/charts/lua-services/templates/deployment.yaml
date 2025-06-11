@@ -1,3 +1,4 @@
+{{- if .Values.deployment }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,7 +8,7 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.deployment.replicaCount | default 1 }}
   selector:
     matchLabels:
       {{- include "app.selectorLabels" . | nindent 6 }}
@@ -16,28 +17,26 @@ spec:
       labels:
         {{- include "app.selectorLabels" . | nindent 8 }}
         {{- include "app.tag" . | nindent 8 }}
-        {{- include "app.ownerLabel" . | nindent 8 }}
-        {{- if .Values.podLabels }}
-        {{- toYaml .Values.podLabels | nindent 8 }}
-        {{- end }}
     spec:
+      {{- with .Values.deployment.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       volumes:
         - name: tmp-volume
           emptyDir: {}
         - name: config-volume
           configMap:
             name: {{ include "app.fullname" . }}
-        {{- if .Values.config.external_secret.enabled }}
+        {{- if .Values.deployment.config.external_secret.enabled }}
         - name: external-secret-volume
           secret:
             secretName: {{ include "app.fullname" . }}-secret
         {{- end }}
       containers:
         - name: {{ include "app.name" . }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           volumeMounts:
             - name: tmp-volume
               mountPath: /tmp
@@ -45,42 +44,41 @@ spec:
               mountPath: /mnt/lua/config.lua
               subPath: config.lua
               readOnly: true
-            {{- if .Values.config.external_secret.enabled }}
+            {{- if .Values.deployment.config.external_secret.enabled }}
             - name: external-secret-volume
               mountPath: /mnt/lua/secrets.lua
               subPath: secrets.lua
               readOnly: true
             {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
           env:
             - name: K8S_POD_ID
               valueFrom:
                 fieldRef:
-                  fieldPath: metadata.uid
-            - name: K8S_POD_NAME
-              valueFrom:
-                fieldRef:
                   fieldPath: metadata.name
             - name: IMAGE_TAG
-              value: {{ .Values.image.tag | quote }}
-            {{- if .Values.env }}
-            {{- toYaml .Values.env | nindent 12 }}
+              value: {{ .Values.deployment.image.tag | quote }}
+            {{- if .Values.deployment.env }}
+            {{- toYaml .Values.deployment.env | nindent 12 }}
             {{- end }}
           ports:
             - name: http
-              containerPort: {{ .Values.containerPort }}
+              containerPort: {{ .Values.deployment.containerPort }}
           livenessProbe:
           {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- if .Values.readinessProbe }}
           readinessProbe:
           {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
           {{- if .Values.startupProbe }}
           startupProbe:
           {{- toYaml .Values.startupProbe | nindent 12 }}
           {{- end }}
-          {{- with .Values.lifecycle }}
+          {{- with .Values.deployment.lifecycle }}
           lifecycle:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+{{- end }}
 
 

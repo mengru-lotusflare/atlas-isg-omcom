@@ -1,1 +1,6 @@
 replicaCount: 1
+
+image:
+  repository: 637423436902.dkr.ecr.ap-southeast-1.amazonaws.com/isg-omcom/lf-images/lf-api-invoker
+  tag: master-2025-06-09-1434-a4a9508
+  pullPolicy: IfNotPresent

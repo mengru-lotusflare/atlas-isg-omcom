@@ -1,5 +1,4 @@
-{{- range $name, $chart := .Values }}
-{{- if and (kindOf $chart | eq "map") (hasKey $chart "service") }}
+{{- if .Values.service }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,6 +18,4 @@ spec:
     {{- else }}
     {{- include "app.selectorLabels" . | nindent 4 }}
     {{- end }}
----
-{{- end }}
 {{- end }}

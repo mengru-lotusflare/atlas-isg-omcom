@@ -1,4 +1,4 @@
-{{- $appName := include "app.name" $ }}
+{{- $appName := include "app.fullname" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,33 +7,30 @@ metadata:
     {{- toYaml $.Values.annotations | nindent 4 }}
   labels:
     {{- include "app.labels" $ | nindent 4 }}
+    app: {{ $appName }}
 spec:
-  replicas: {{ $.Values.replicaCount }}
-  strategy:
-    {{- toYaml $.Values.strategy | nindent 4 }}
+  replicas: {{ .Values.replicaCount | default 1 }}
+  {{- with $.Values.imagePullSecrets }}
+    imagePullSecrets:
+      {{- toYaml . | nindent 8 }}
+  {{- end }}
   selector:
     matchLabels:
-      {{- include "app.selectorLabels" $ | nindent 6 }}
+      app: {{ $appName }}
   template:
     metadata:
       labels:
-        {{- include "app.selectorLabels" $ | nindent 8 }}
+        app: {{ $appName }}
         {{- include "app.tag" $ | nindent 8 }}
-        {{- include "app.ownerLabel" $ | nindent 8 }}
-{{- range $key, $value := $.Values.podLabels }}
-        {{ $key }}: {{ $value }}
-{{- end }}
       annotations:
         {{- include "app.repoLabel" $ | nindent 8 }}
-        {{- include "elastic.multiline.annotations" $ | nindent 8 }}
         checksum/configmap: {{ include (print $.Template.BasePath "/cluster-configmap.yaml") $ | sha256sum | quote }}
-        checksum/staticjobs: {{ $.Values.application.jobs | toJson | sha256sum | quote }}
-        {{- include "aws.iam.role.annotation" $ | nindent 8 }}
-{{- range $key, $value := (merge  $.Values.podAnnotations  $.Values.serviceAccount.annotations) }}
+        checksum/staticjobs: {{ .Values.application.jobs | toJson | sha256sum | quote }}
+{{- range $key, $value := (merge $.Values.podAnnotations $.Values.serviceAccount.annotations) }}
         {{ $key }}: {{ $value | quote }}
 {{- end }}
     spec:
-    {{- with  $.Values.imagePullSecrets }}
+    {{- with $.Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml $ | nindent 8 }}
     {{- end }}
@@ -42,11 +39,11 @@ spec:
       securityContext:
         {{- toYaml $.Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ include "app.name" $ }}
+        - name: {{ $appName }}
           securityContext:
-            {{- toYaml $.Values.application.securityContext | nindent 12 }}
-          image: "{{  $.Values.application.image.repository }}/{{  $.Values.application.image.overrides.imageName | default  $.Values.application.name }}:{{  $.Values.application.image.tag }}"
-          imagePullPolicy: {{  $.Values.application.image.pullPolicy }}
+            {{- toYaml .Values.application.securityContext | nindent 12 }}
+          image: "{{ .Values.application.image.repository }}/{{ .Values.application.image.overrides.imageName | default .Values.application.name }}:{{ .Values.application.image.tag }}"
+          imagePullPolicy: {{ .Values.application.image.pullPolicy }}
           env:
             - name: K8S_POD_ID
               valueFrom:
@@ -56,38 +53,38 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-          {{- if $.Values.application.env }}
-          {{- toYaml $.Values.application.env | nindent 12 }}
+          {{- if .Values.application.env }}
+          {{- toYaml .Values.application.env | nindent 12 }}
           {{- end }}
           resources:
-            {{- toYaml $.Values.application.resources | nindent 12 }}
-          {{- if  $.Values.application.command }}
+            {{- toYaml .Values.application.resources | nindent 12 }}
+          {{- if .Values.application.command }}
           command:
-            {{- toYaml  $.Values.application.command | nindent 12 }}
+            {{- toYaml .Values.application.command | nindent 12 }}
           {{- else }}
           command: [ "/launcher" ]
           {{- end }}
-          {{- if $.Values.application.args }}
+          {{- if .Values.application.args }}
           args:
-            {{- toYaml $.Values.application.args | nindent 12 }}
+            {{- toYaml .Values.application.args | nindent 12 }}
           {{- end }}
-          {{- if $.Values.application.livenessProbe }}
+          {{- if .Values.application.livenessProbe }}
           livenessProbe:
-          {{- toYaml $.Values.application.livenessProbe | nindent 12 }}
+          {{- toYaml .Values.application.livenessProbe | nindent 12 }}
           {{- end }}
-          {{- if $.Values.application.readinessProbe }}
+          {{- if .Values.application.readinessProbe }}
           readinessProbe:
-          {{- toYaml $.Values.application.readinessProbe | nindent 12 }}
+          {{- toYaml .Values.application.readinessProbe | nindent 12 }}
           {{- end }}
-          {{- if $.Values.application.startupProbe }}
+          {{- if .Values.application.startupProbe }}
           startupProbe:
-          {{- toYaml $.Values.application.startupProbe | nindent 12 }}
+          {{- toYaml .Values.application.startupProbe | nindent 12 }}
           {{- end }}
-          {{- if $.Values.application.service.enabled }}
+          {{- if .Values.application.service.enabled }}
           ports:
-            - name: {{ $.Values.application.service.portName }}
-              containerPort: {{ $.Values.application.service.targetPort }}
-              protocol: {{ $.Values.application.service.protocol | upper }}
+            - name: {{ .Values.application.service.portName }}
+              containerPort: {{ .Values.application.service.targetPort }}
+              protocol: {{ .Values.application.service.protocol | upper }}
           {{- end }}
           volumeMounts:
             - name: heap-dumps
@@ -102,7 +99,7 @@ spec:
             - name: default-config
               mountPath: "/app/static_jobs.json"
               subPath: static_jobs.json
-            {{- if $.Values.application.dependencies.logstash.enabled }}
+            {{- if .Values.application.dependencies.logstash.enabled }}
             - name: config
               mountPath: "/app/logback.xml"
               subPath: logback.xml
@@ -112,25 +109,25 @@ spec:
               subPath: launcher_config.yaml
             - name: data
               mountPath: /mnt
-            {{- range $index, $mountProperties := $.Values.application.additionalMounts }}
+            {{- range $index, $mountProperties := .Values.application.additionalMounts }}
             - name: {{ $mountProperties.name }}
               mountPath: {{ $mountProperties.mountPath }}
               subPath: {{ $mountProperties.subPath }}
             {{- end }}
-            {{- if $.Values.application.dependencies.externalSecret.enabled }}
+            {{- if .Values.application.dependencies.externalSecret.enabled }}
             - name: external-secret-volume
               mountPath: /app/secrets.json
               subPath: secrets.json
               readOnly: true
             {{- end }}
       volumes:
-        {{- if $.Values.application.additionalVolumes }}
-        {{- toYaml $.Values.application.additionalVolumes | nindent 8  }}
+        {{- if .Values.application.additionalVolumes }}
+        {{- toYaml .Values.application.additionalVolumes | nindent 8  }}
         {{- end }}
-        {{- if $.Values.application.dependencies.externalSecret.enabled }}
+        {{- if .Values.application.dependencies.externalSecret.enabled }}
         - name: external-secret-volume
           secret:
-            secretName: {{ include "app.name" $ }}-secret
+            secretName: {{ $appName }}-secret
         {{- end }}
         - name: heap-dumps
           emptyDir: {}
@@ -143,8 +140,6 @@ spec:
             name: {{ $appName }}
         - name: default-config
           configMap:
-            name: {{ include "app.name" $ }}
+            name: {{ $appName }}
         - name: data
           emptyDir: {}
-
----

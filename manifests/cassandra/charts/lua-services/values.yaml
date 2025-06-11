@@ -1,6 +1,20 @@
 global:
   appName: isg-omcom
 
+containerPort: 8080
+securityContext: {}
+config:
+  external_secret:
+    enabled: false
+env: []
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
 livenessProbe:
   httpGet:
     path: /liveness
@@ -32,7 +46,7 @@ startupProbe:
 service:
   type: ClusterIP
   ports:
-    http:
-      name: http
+    - name: http
       port: 80
-      targetPort: http
+      targetPort: 8080
+      protocol: TCP
