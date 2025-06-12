@@ -1,0 +1,5 @@
+apiVersion: v2
+name: isg-omcom-lf-cep-prioritizer
+description: Helm chart for ISG OMCOM Cassandra ScalaServices lf-cep-prioritizer
+version: 0.1.0
+appVersion: "1.0"
