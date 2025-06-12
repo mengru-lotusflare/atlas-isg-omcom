@@ -1,0 +1,5 @@
+apiVersion: v2
+name: isg-omcom-lf-api-invoker
+description: Helm chart for ISG OMCOM Cassandra ScalaServices lf-api-invoker
+version: 0.1.0
+appVersion: "1.0"
