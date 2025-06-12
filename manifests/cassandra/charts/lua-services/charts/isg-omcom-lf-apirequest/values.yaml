@@ -1,8 +1,16 @@
-replicaCount: 3
-
-service: 
-  type: ClusterIP
-  ports: 
-    - protocol: TCP
-      port: 3000
-      targetPort: 8080
+# Application specific deployment configuration
+deployment:
+  replicaCount: 1
+  image:
+    repository: globe.jfrog.io/artifactory/isg-omcom-docker-local-nonprod/lf-apirequest
+    tag: master-2025-06-03-0944-89cb7a8
+    pullPolicy: IfNotPresent
+  containerPort: 8080
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  env: []

@@ -1,42 +1,92 @@
+{{- range $chartName, $chart := .Subcharts }}
+{{- if $chart.Values.deployment }}
+{{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
+{{- $externalSecretEnabled := false }}
+{{- if $chart.Values.deployment.config }}
+{{- if $chart.Values.deployment.config.external_secret }}
+{{- $externalSecretEnabled = $chart.Values.deployment.config.external_secret.enabled }}
+{{- end }}
+{{- end }}
+{{- if not $externalSecretEnabled }}
+{{- if $.Values.deploymentDefaults.config }}
+{{- if $.Values.deploymentDefaults.config.external_secret }}
+{{- $externalSecretEnabled = $.Values.deploymentDefaults.config.external_secret.enabled }}
+{{- end }}
+{{- end }}
+{{- end }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test-deploy-lf-lua
+  name: {{ $appName }}
+  namespace: {{ $.Release.Namespace }}
   labels:
-    name: test-deploy-lf-lua
+    app.kubernetes.io/name: {{ $appName }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app: {{ $appName }}
+  {{- with $.Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  replicas: 1
+  replicas: {{ $chart.Values.deployment.replicaCount | default $.Values.deploymentDefaults.replicaCount }}
   selector:
     matchLabels:
-      app: test-deploy-lf-lua
+      app: {{ $appName }}
   template:
     metadata:
       labels:
-        app: test-deploy-lf-lua
+        app: {{ $appName }}
+        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag }}
     spec:
+      {{- with $chart.Values.deployment.imagePullSecrets }}
       imagePullSecrets:
-      - name: isg-omcom-dv-jfrog-secret
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+        {{- if $externalSecretEnabled }}
+        - name: external-secret-volume
+          secret:
+            secretName: {{ $appName }}-secret
+        {{- end }}
       containers:
-      - name: {{ .Chart.Name }}
-        image: globe.pe.jfrog.io/hmd-dockerhub/jonlabelle/network-tools:latest
-        imagePullPolicy: IfNotPresent
-        command: ["/bin/sh", "-c", "echo 'Forcing the container to run infinitely'; sleep infinity"]
-        resources:
-          limits:
-            cpu: 0.5m
-            memory: 256Mi
-        # ports:
-        # - name: http
-        #   containerPort: 8080
-        #   protocol: TCP
-        # resources:
-        #   requests:
-        #     cpu: 200m
-        #     memory: 500Mi
-        #   limits:
-        #     cpu: 2
-        #     memory:
-        env:
-        - name: TZ
-          value: Asia/Jakarta
-
+        - name: {{ $appName }}
+          image: "{{ $chart.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deploymentDefaults.image.pullPolicy }}
+          volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+            {{- if $externalSecretEnabled }}
+            - name: external-secret-volume
+              mountPath: /mnt/lua/secrets.lua
+              subPath: secrets.lua
+              readOnly: true
+            {{- end }}
+          resources:
+            {{- toYaml ($chart.Values.deployment.resources | default $.Values.deploymentDefaults.resources) | nindent 12 }}
+          env:
+            - name: K8S_POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: IMAGE_TAG
+              value: {{ $chart.Values.deployment.image.tag | quote }}
+            {{- with ($chart.Values.deployment.env | default $.Values.deploymentDefaults.env) }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deploymentDefaults.containerPort }}
+          {{- with $.Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
+{{- end }}
