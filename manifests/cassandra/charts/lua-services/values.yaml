@@ -7,6 +7,8 @@ annotations: {}
 # Global deployment defaults
 deploymentDefaults:
   replicaCount: 1
+  imagePullSecrets:
+    - name: isg-omcom-dv-jfrog-secret
   image:
     pullPolicy: IfNotPresent
   containerPort: 8080

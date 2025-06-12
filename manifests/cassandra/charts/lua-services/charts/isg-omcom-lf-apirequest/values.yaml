@@ -2,8 +2,8 @@
 deployment:
   replicaCount: 1
   image:
-    repository: 637423436902.dkr.ecr.ap-southeast-1.amazonaws.com/isg-omcom/lf-images/lf-apirequest
-    tag: master-2025-06-09-2000-e369c06
+    repository: globe.jfrog.io/artifactory/isg-omcom-docker-local-nonprod/lf-apirequest
+    tag: master-2025-06-03-0944-89cb7a8
     pullPolicy: IfNotPresent
   containerPort: 8080
   resources:
