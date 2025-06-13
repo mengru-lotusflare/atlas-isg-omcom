@@ -1,9 +1,5 @@
 {{- range $chartName, $chart := .Subcharts }}
 {{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
-{{- $servicePort := $.Values.ingress.port }}
-{{- $serviceTargetPort := $.Values.ingress.targetPort }}
-{{- $serviceProtocol := $.Values.ingress.protocol }}
-{{- $servicePortName := $.Values.ingress.portName }}
 
 {{- if $chart.Values.ingress }}
 {{- end }}
