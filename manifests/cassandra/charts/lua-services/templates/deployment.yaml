@@ -25,7 +25,9 @@ spec:
     metadata:
       labels:
         app: {{ $appName }}
-        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag | default $.Values.deployment.image.tag }}
+        {{- if $chart.Values.deployment.image.tag }}
+        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag }}
+        {{- end }}
       {{- with $chart.Values.podAnnotations | default $.Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -60,8 +62,13 @@ spec:
         {{- end }}
       containers:
         - name: {{ $appName }}
-            image: "{{ $chart.Values.deployment.image.repository | default $.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag | default $.Values.deployment.image.tag }}"
-            imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deployment.image.pullPolicy }}
+          {{- if $chart.Values.deployment.image }}
+          image: "{{ $chart.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag }}"
+          imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deployment.image.pullPolicy }}
+          {{- else }}
+          image: "nginx:latest"
+          imagePullPolicy: IfNotPresent
+          {{- end }}
           volumeMounts:
             - name: tmp-volume
               mountPath: /tmp
@@ -79,6 +86,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+<<<<<<< HEAD
             {{- if and $chart.Values.deployment.image.tag }}
             - name: IMAGE_TAG
               value: {{ $chart.Values.deployment.image.tag | quote }}
@@ -87,17 +95,25 @@ spec:
             {{- toYaml $chart.Values.deployment.env | nindent 12 }}
             {{- else if $.Values.deployment.env }}
             {{- toYaml $.Values.deployment.env | nindent 12 }}
+=======
+            {{- if $chart.Values.deployment.image.tag }}
+            - name: IMAGE_TAG
+              value: {{ $chart.Values.deployment.image.tag | quote }}
+            {{- end }}
+            {{- $envVars := $chart.Values.deployment.env | default $.Values.deployment.env }}
+            {{- if $envVars }}
+            {{- toYaml $envVars | nindent 12 }}
+>>>>>>> e851434 (fix deployment template)
             {{- end }}
           ports:
             - name: http
               containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deployment.containerPort }}
-              protocol: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.protocol }}{{ else }}{{ $.Values.service.protocol }}{{ end }}
+              protocol: {{ $chart.Values.service.protocol | default $.Values.service.protocol }}
           {{- $livenessProbe := $chart.Values.livenessProbe | default $.Values.livenessProbe }}
           {{- if $livenessProbe }}
           livenessProbe:
             {{- toYaml $livenessProbe | nindent 12 }}
           {{- end }}
-
           {{- $readinessProbe := $chart.Values.readinessProbe | default $.Values.readinessProbe }}
           {{- if $readinessProbe }}
           readinessProbe:
