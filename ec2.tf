@@ -15,7 +15,7 @@ module "ec2_standalone_module" {
   ami = {
     is_soe = true
     name   = "atlas-amazonlinux2"
-    build  = 147 # Enter value
+    build  = 148 # Enter value
   }
 
   #Allocate multiple security rules
