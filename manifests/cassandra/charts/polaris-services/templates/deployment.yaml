@@ -79,6 +79,15 @@ spec:
                   fieldPath: metadata.name
             - name: IMAGE_TAG
               value: {{ $chart.Values.deployment.image.tag | quote }}
+            {{- range $key, $value := .Values.extraEnv | default dict }}
+            - name: {{ $key }}
+              {{- if kindIs "string" $value }}
+              value: {{ $value | quote }}
+              {{- else if kindIs "map" $value }}
+              {{ toYaml $value | nindent 14 }}
+              {{- else }}
+              {{- end }}
+            {{- end }}
             {{- with ($chart.Values.deployment.env | default $.Values.deploymentDefaults.env) }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
