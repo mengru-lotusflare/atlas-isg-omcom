@@ -47,7 +47,7 @@ externalSecret:
   enabled: true
   refreshInterval: 5m
   data:
-    - secretKey: /tmfc/configuration/service
+    - secretKey: tmfc_configuration_service
       remoteRef:
         key: isg/omcom/dv/cassandra/app/polaris/secret-sm
         property: /tmfc/configuration/service
