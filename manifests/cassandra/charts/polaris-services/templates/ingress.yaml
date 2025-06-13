@@ -5,11 +5,11 @@
 {{- $serviceProtocol := $.Values.ingress.protocol }}
 {{- $servicePortName := $.Values.ingress.portName }}
 
-{{- if $chart.Values.service }}
-{{- if $chart.Values.service.port }}{{ $servicePort = $chart.Values.ingress.port }}{{ end }}
-{{- if $chart.Values.service.targetPort }}{{ $serviceTargetPort = $chart.Values.ingress.targetPort }}{{ end }}
-{{- if $chart.Values.service.protocol }}{{ $serviceProtocol = $chart.Values.ingress.protocol }}{{ end }}
-{{- if $chart.Values.service.portName }}{{ $servicePortName = $chart.Values.ingress.portName }}{{ end }}
+{{- if $chart.Values.ingress }}
+{{- if $chart.Values.ingress.port }}{{ $servicePort = $chart.Values.ingress.port }}{{ end }}
+{{- if $chart.Values.ingress.targetPort }}{{ $serviceTargetPort = $chart.Values.ingress.targetPort }}{{ end }}
+{{- if $chart.Values.ingress.protocol }}{{ $serviceProtocol = $chart.Values.ingress.protocol }}{{ end }}
+{{- if $chart.Values.ingress.portName }}{{ $servicePortName = $chart.Values.ingress.portName }}{{ end }}
 {{- end }}
 
 ---
