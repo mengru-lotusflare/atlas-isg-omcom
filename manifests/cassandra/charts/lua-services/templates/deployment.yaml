@@ -25,7 +25,7 @@ spec:
     metadata:
       labels:
         app: {{ $appName }}
-        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag | default $Values.deployment.image.tag }}
+        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag | default $.Values.deployment.image.tag }}
       {{- with $chart.Values.podAnnotations | default $.Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
