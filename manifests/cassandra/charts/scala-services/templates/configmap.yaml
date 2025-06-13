@@ -48,13 +48,7 @@ data:
   launcher_config.yaml: |
     AppConf: /app/application.conf
     DumpPath: /dump
-    {{- $jarName := $appName }}
-    {{- if and $chart.Values.overrides (hasKey $chart.Values.overrides "jarName") }}
-    {{- $jarName = $chart.Values.overrides.jarName }}
-    {{- else if and $.Values.overrides (hasKey $.Values.overrides "jarName") }}
-    {{- $jarName = $.Values.overrides.jarName }}
-    {{- end }}
-    Jar: /usr/share/java/{{ $jarName }}.jar
+    Jar: /usr/share/java/{{ $.Values.overrides.jarName | default $appName }}.jar
     JvmOpts:
       - "-XX:+ExitOnOutOfMemoryError"
       - "-XX:+HeapDumpOnOutOfMemoryError"
