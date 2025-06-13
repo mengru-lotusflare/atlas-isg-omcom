@@ -1,6 +1,7 @@
 {{- if .Values.ingress.internal.enabled }}
 {{- range $chartName, $chart := .Subcharts }}
 {{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
+{{- $svcPort := .Values.ingress.port -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -16,18 +17,29 @@ spec:
   {{- if .Values.ingress.internal.tls }}
   tls:
     - hosts:
-        - {{ printf "tmfc-%s" (trimPrefix "lf-" $appName) }}.{{ or .Values.global.envDomain .Values.baseDomain }}
+        - {{ .host | quote }}
       secretName: {{ $appName }}-tls
   {{- end }}
   rules:
-    - host: {{ printf "tmfc-%s" (trimPrefix "lf-" $appName) }}.{{ or .Values.global.envDomain .Values.baseDomain }}
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
       http:
         paths:
-          - path: /
-            pathType: ImplementationSpecific
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: /
+            {{- end }}
             backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
                 name: {{ $appName }}
                 port:
-                  number: 80
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $appName }}
+              servicePort: {{ $svcPort }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
 {{- end }}
