@@ -20,7 +20,7 @@ spec:
       secretName: {{ $appName }}-tls
   {{- end }}
   rules:
-    - host: {{ printf "tmfc-%s" (trimPrefix "lf-" $fullNappNameame) }}.{{ or .Values.global.envDomain .Values.baseDomain }}
+    - host: {{ printf "tmfc-%s" (trimPrefix "lf-" $appName) }}.{{ or .Values.global.envDomain .Values.baseDomain }}
       http:
         paths:
           - path: /
