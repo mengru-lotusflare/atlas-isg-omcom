@@ -47,10 +47,13 @@ spec:
       volumes:
         - name: tmp-volume
           emptyDir: {}
-        {{- if $externalSecretEnabled }}
-        - name: external-secret-volume
+        {{- if .Values.secrets }}
+        - name: secrets
           secret:
             secretName: {{ $appName }}-secret
+        {{- end }}
+        {{- if and .Values.extraVolumes .Values.extraVolumeMounts }}
+        {{- toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
       containers:
         - name: {{ $appName }}
@@ -59,11 +62,13 @@ spec:
           volumeMounts:
             - name: tmp-volume
               mountPath: /tmp
-            {{- if $externalSecretEnabled }}
-            - name: external-secret-volume
-              mountPath: /mnt/lua/secrets.lua
-              subPath: secrets.lua
+            {{- if .Values.secrets }}
+            - name: secrets
+              mountPath: /etc/nginx/secrets
               readOnly: true
+            {{- end }}
+            {{- if .Values.extraVolumeMounts }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
           resources:
             {{- toYaml ($chart.Values.deployment.resources | default $.Values.deploymentDefaults.resources) | nindent 12 }}
@@ -77,6 +82,10 @@ spec:
             {{- with ($chart.Values.deployment.env | default $.Values.deploymentDefaults.env) }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- if .Values.envFrom }}
+          envFrom:
+            {{- toYaml .Values.envFrom | nindent 12 }}
+          {{- end }}  
           ports:
             - name: http
               containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deploymentDefaults.containerPort }}
