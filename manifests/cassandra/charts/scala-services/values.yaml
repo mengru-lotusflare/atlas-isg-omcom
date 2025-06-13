@@ -41,59 +41,6 @@ service:
   port: 80
   targetPort: 8080
 
-dependencies:
-  kafka:
-    enabled: false
-    hosts:
-      - "kafka-0"
-      - "kafka-1"
-      - "kafka-2"
-    port: 9092
-    overrides:
-      consumer:
-        # -- Used for overriding consumer batch size.
-        batchSize: ""
-        # -- Used for overriding consumer group name.
-        # Important note, some Scala apps might ignore this configuration.
-        group: ""
-        consumerRecovery:
-          # -- Used for enabling consumer recovery mechanism in case of any non-fatal error in Kafka consumer.
-          enabled: true
-        messageRetry:
-          # -- Used for enabling message retry mechanism for streaming Kafka consumer.
-          # Important note, this has no effect on batched Kafka consumer.
-          enabled: false
-          # -- Used for overriding dead letter topic for messages that didn't pass retries.
-          deadLetterTopic: ""
-
-  redis:
-    enabled: false
-    hosts:
-      - "redis"
-    hostReadReplicas:
-      - "redis-ro"
-    port: 6379
-    sslEnabled: false
-    specializedRedisClustersMap: []
-
-  cassandra:
-    enabled: false
-    hosts:
-      - "cassandra-0"
-      - "cassandra-1"
-      - "cassandra-2"
-    port: 9042
-    dlqTopic: "lf_cassandra_dlq"
-
-  jcm:
-    enabled: false
-
-  opentelemetry:
-    enabled: false
-
-  externalHttp:
-    enabled: true
-
 overrides:
   jarName: ""
 
@@ -131,9 +78,6 @@ config:
   additional-configs:
     enabled: false
     location: "/app/config"
-  opentelemetry:
-    enabled: false
-    endpoint: "http://opentelemetry-collector.monitoring.svc.cluster.local:4317"
 
 launcher_config:
   Xms: 192m
@@ -164,3 +108,5 @@ launcher_config:
     - "-XX:+UseStringDeduplication"
     - "-XX:+UseG1GC"
     - "-XX:MaxGCPauseMillis=10"
+
+jobs: {}

@@ -36,42 +36,45 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - name: heap-dumps
-          emptyDir: {}
-        - name: tmp
-          emptyDir: {}
-        - name: logs
-          emptyDir: {}
-        - name: config
-          configMap:
+        - emptyDir: {}
+          name: heap-dumps
+        - emptyDir: {}
+          name: tmp
+        - emptyDir: {}
+          name: logs
+        - configMap:
+            defaultMode: 420
             name: {{ $appName }}
-        - name: default-config
-          configMap:
+          name: config
+        - configMap:
+            defaultMode: 420
             name: {{ $appName }}
-        - name: data
-          emptyDir: {}
+          name: default-config
+        - emptyDir: {}
+          name: data
       containers:
         - name: {{ $appName }}
           image: "{{ $chart.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deployment.image.pullPolicy }}
+          command: [ "/launcher" ]
           volumeMounts:
-            - name: heap-dumps
-              mountPath: /dump
-            - name: tmp
-              mountPath: /tmp
-            - name: logs
-              mountPath: /logs
-            - name: config
-              mountPath: "/app/application.conf"
+            - mountPath: /dump
+              name: heap-dumps
+            - mountPath: /tmp
+              name: tmp
+            - mountPath: /logs
+              name: logs
+            - mountPath: /app/application.conf
+              name: config
               subPath: application_config.json
-            - name: default-config
-              mountPath: "/app/static_jobs.json"
+            - mountPath: /app/static_jobs.json
+              name: default-config
               subPath: static_jobs.json
-            - name: config
-              mountPath: "/launcher-config.yaml"
+            - mountPath: /launcher-config.yaml
+              name: config
               subPath: launcher_config.yaml
-            - name: data
-              mountPath: /mnt
+            - mountPath: /mnt
+              name: data
           resources:
             {{- if $chart.Values.deployment.resources }}
             {{- toYaml $chart.Values.deployment.resources | nindent 12 }}
@@ -80,6 +83,10 @@ spec:
             {{- end }}
           env:
             - name: K8S_POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: K8S_POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
