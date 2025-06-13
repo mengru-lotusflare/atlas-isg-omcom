@@ -23,26 +23,21 @@ data:
     {{- $fileContent | nindent 4 }}
   {{- end }}
   {{- end }}
-  
   {{- if or $chart.Values.config $.Values.config }}
   lua_config.json: |
     {{- $config := dict }}
-    
     {{- if $chart.Values.config }}
     {{- $config = merge $config $chart.Values.config }}
     {{- else }}
     {{- $config = merge $config $.Values.config }}
     {{- end }}
-    
     {{- if $chart.Values.dependencies }}
     {{- $config = merge $config (dict "dependencies" $chart.Values.dependencies) }}
     {{- else if $.Values.dependencies }}
     {{- $config = merge $config (dict "dependencies" $.Values.dependencies) }}
     {{- end }}
-    
     {{- $config | toPrettyJson | nindent 4 }}
   {{- end }}
-  
   {{- if $chart.Values.nginx }}
   nginx.conf: |
     {{- $chart.Values.nginx | nindent 4 }}
