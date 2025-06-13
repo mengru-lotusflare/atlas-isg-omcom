@@ -25,9 +25,7 @@ spec:
     metadata:
       labels:
         app: {{ $appName }}
-        {{- if and $chart.Values.deployment.image.tag }}
-        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag }}
-        {{- end }}
+        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag | default $Values.deployment.image.tag }}
       {{- with $chart.Values.podAnnotations | default $.Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
@@ -62,13 +60,8 @@ spec:
         {{- end }}
       containers:
         - name: {{ $appName }}
-          {{- if $chart.Values.deployment.image }}
-          image: "{{ $chart.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag }}"
-          imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deployment.image.pullPolicy }}
-          {{- else }}
-          image: "nginx:latest"
-          imagePullPolicy: IfNotPresent
-          {{- end }}
+            image: "{{ $chart.Values.deployment.image.repository | default $.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag | default $.Values.deployment.image.tag }}"
+            imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deployment.image.pullPolicy }}
           volumeMounts:
             - name: tmp-volume
               mountPath: /tmp
@@ -79,11 +72,8 @@ spec:
               readOnly: true
             {{- end }}
           resources:
-            {{- if $chart.Values.deployment.resources }}
-            {{- toYaml $chart.Values.deployment.resources | nindent 12 }}
-            {{- else if $.Values.deployment.resources }}
-            {{- toYaml $.Values.deployment.resources | nindent 12 }}
-            {{- end }}
+            {{- $resources := $chart.Values.deployment.resources | default $.Values.deployment.resources }}
+            {{- toYaml $resources | nindent 12 }}
           env:
             - name: K8S_POD_ID
               valueFrom:
@@ -102,19 +92,16 @@ spec:
             - name: http
               containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deployment.containerPort }}
               protocol: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.protocol }}{{ else }}{{ $.Values.service.protocol }}{{ end }}
-          {{- if $chart.Values.livenessProbe }}
+          {{- $livenessProbe := $chart.Values.livenessProbe | default $.Values.livenessProbe }}
+          {{- if $livenessProbe }}
           livenessProbe:
-            {{- toYaml $chart.Values.livenessProbe | nindent 12 }}
-          {{- else if $.Values.livenessProbe }}
-          livenessProbe:
-            {{- toYaml $.Values.livenessProbe | nindent 12 }}
+            {{- toYaml $livenessProbe | nindent 12 }}
           {{- end }}
-          {{- if $chart.Values.readinessProbe }}
+
+          {{- $readinessProbe := $chart.Values.readinessProbe | default $.Values.readinessProbe }}
+          {{- if $readinessProbe }}
           readinessProbe:
-            {{- toYaml $chart.Values.readinessProbe | nindent 12 }}
-          {{- else if $.Values.readinessProbe }}
-          readinessProbe:
-            {{- toYaml $.Values.readinessProbe | nindent 12 }}
+            {{- toYaml $readinessProbe | nindent 12 }}
           {{- end }}
 {{- end }}
 {{- end }}
