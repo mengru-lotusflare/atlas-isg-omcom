@@ -48,7 +48,7 @@ data:
   launcher_config.yaml: |
     AppConf: /app/application.conf
     DumpPath: /dump
-    Jar: /usr/share/java/{{ $.Values.overrides.jarName | default $appName }}.jar
+    Jar: /usr/share/java/{{ $.Values.overrides.jarName | default $chart.Values.overrides.jarName }}.jar
     JvmOpts:
       - "-XX:+ExitOnOutOfMemoryError"
       - "-XX:+HeapDumpOnOutOfMemoryError"
@@ -77,7 +77,6 @@ data:
       - {{ $jvmOption | quote }}
       {{- end }}
       {{- end }}
-    Logback: /app/logback.xml
     Name: {{ $appName }}
 {{- end }}
 {{- end }}

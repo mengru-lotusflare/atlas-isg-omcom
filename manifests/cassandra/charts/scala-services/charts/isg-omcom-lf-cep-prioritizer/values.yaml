@@ -15,6 +15,9 @@ deployment:
     - name: LAUNCHER_CONFIG_FILE
       value: "/launcher-config.yaml"
 
+overrides:
+  jarName: lf-prioritizer
+
 config:
   consumer:
     circuit-breaker:
