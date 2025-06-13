@@ -9,7 +9,7 @@ exposedPaths: []
 extraServersConf: ""
 
 # Global deployment defaults
-deploymentDefaults:
+deployment:
   replicaCount: 1
   imagePullSecrets:
     - name: isg-omcom-dv-jfrog-secret
@@ -52,7 +52,7 @@ readinessProbe:
   periodSeconds: 10
 
 # Global service configurations
-serviceDefaults:
+service:
   type: ClusterIP
   protocol: TCP
   portName: http
