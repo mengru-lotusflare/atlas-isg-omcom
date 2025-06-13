@@ -1,5 +1,5 @@
 {{- range $chartName, $chart := .Subcharts }}
-{{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
+{{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
 {{- $serviceType := $.Values.serviceDefaults.type }}
 {{- $servicePort := $.Values.serviceDefaults.port }}
 {{- $serviceTargetPort := $.Values.serviceDefaults.targetPort }}
