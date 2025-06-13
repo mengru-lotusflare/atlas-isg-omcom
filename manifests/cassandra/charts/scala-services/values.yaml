@@ -76,9 +76,6 @@ config:
   additional-configs:
     enabled: false
     location: "/app/config"
-  opentelemetry:
-    enabled: false
-    endpoint: "http://opentelemetry-collector.monitoring.svc.cluster.local:4317"
 
 launcher_config:
   Xms: 192m

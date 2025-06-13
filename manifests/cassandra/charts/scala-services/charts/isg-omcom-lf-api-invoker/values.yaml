@@ -76,5 +76,3 @@ config:
   predefined-labels:
     app: api-invoker
   producer-product: DNO Platform
-  opentelemetry:
-    enabled: true
