@@ -1,11 +1,20 @@
-{{- if $chart.Values.ingress.enabled -}}
-{{- $fullName := include "..fullname" . -}}
-{{- $svcPort := $chart.Values.service.port -}}
-{{- if and $chart.Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
-  {{- if not (hasKey $chart.Values.ingress.annotations "kubernetes.io/ingress.class") }}
-  {{- $_ := set $chart.Values.ingress.annotations "kubernetes.io/ingress.class" $chart.Values.ingress.className}}
-  {{- end }}
+{{- range $chartName, $chart := .Subcharts }}
+{{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
+{{- $serviceType := $.Values.ingress.type }}
+{{- $servicePort := $.Values.ingress.port }}
+{{- $serviceTargetPort := $.Values.ingress.targetPort }}
+{{- $serviceProtocol := $.Values.ingress.protocol }}
+{{- $servicePortName := $.Values.ingress.portName }}
+
+{{- if $chart.Values.service }}
+{{- if $chart.Values.service.type }}{{ $serviceType = $chart.Values.ingress.type }}{{ end }}
+{{- if $chart.Values.service.port }}{{ $servicePort = $chart.Values.ingress.port }}{{ end }}
+{{- if $chart.Values.service.targetPort }}{{ $serviceTargetPort = $chart.Values.ingress.targetPort }}{{ end }}
+{{- if $chart.Values.service.protocol }}{{ $serviceProtocol = $chart.Values.ingress.protocol }}{{ end }}
+{{- if $chart.Values.service.portName }}{{ $servicePortName = $chart.Values.ingress.portName }}{{ end }}
 {{- end }}
+
+---
 {{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1
 {{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
@@ -52,10 +61,10 @@ spec:
               service:
                 name: {{ $fullName }}
                 port:
-                  number: {{ $svcPort }}
+                  number: {{ $servicePort }}
               {{- else }}
-              serviceName: {{ $fullName }}
-              servicePort: {{ $svcPort }}
+              serviceName: {{ $appName }}
+              servicePort: {{ $servicePort }}
               {{- end }}
           {{- end }}
     {{- end }}
