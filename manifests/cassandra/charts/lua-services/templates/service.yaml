@@ -16,12 +16,13 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  type: {{ $chart.Values.service.type | default $.Values.service.type }}
+  {{- /* First try to get service values from subchart, fall back to parent chart */}}
+  type: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.type }}{{ else }}{{ $.Values.service.type }}{{ end }}
   ports:
-    - port: {{ $chart.Values.service.port | default $.Values.service.port }}
-      targetPort: {{ $chart.Values.service.targetPort | default $.Values.service.targetPort }}
-      protocol: {{ $chart.Values.service.protocol | default $.Values.service.protocol }}
-      name: {{ $chart.Values.service.portName | default $.Values.service.portName }}
+    - port: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.port }}{{ else }}{{ $.Values.service.port }}{{ end }}
+      targetPort: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.targetPort }}{{ else }}{{ $.Values.service.targetPort }}{{ end }}
+      protocol: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.protocol }}{{ else }}{{ $.Values.service.protocol }}{{ end }}
+      name: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.portName }}{{ else }}{{ $.Values.service.portName }}{{ end }}
   selector:
     app: {{ $appName }}
 {{- end }}

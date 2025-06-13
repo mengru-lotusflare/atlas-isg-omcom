@@ -86,16 +86,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-<<<<<<< HEAD
-            {{- if and $chart.Values.deployment.image.tag }}
-            - name: IMAGE_TAG
-              value: {{ $chart.Values.deployment.image.tag | quote }}
-            {{- end }}
-            {{- if $chart.Values.deployment.env }}
-            {{- toYaml $chart.Values.deployment.env | nindent 12 }}
-            {{- else if $.Values.deployment.env }}
-            {{- toYaml $.Values.deployment.env | nindent 12 }}
-=======
             {{- if $chart.Values.deployment.image.tag }}
             - name: IMAGE_TAG
               value: {{ $chart.Values.deployment.image.tag | quote }}
@@ -103,12 +93,10 @@ spec:
             {{- $envVars := $chart.Values.deployment.env | default $.Values.deployment.env }}
             {{- if $envVars }}
             {{- toYaml $envVars | nindent 12 }}
->>>>>>> e851434 (fix deployment template)
             {{- end }}
           ports:
             - name: http
               containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deployment.containerPort }}
-              protocol: {{ $chart.Values.service.protocol | default $.Values.service.protocol }}
           {{- $livenessProbe := $chart.Values.livenessProbe | default $.Values.livenessProbe }}
           {{- if $livenessProbe }}
           livenessProbe:
