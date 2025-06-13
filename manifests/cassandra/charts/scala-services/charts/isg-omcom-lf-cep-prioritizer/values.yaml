@@ -15,23 +15,3 @@ deployment:
     - name: LAUNCHER_CONFIG_FILE
       value: "/launcher-config.yaml"
 
-applications:
-  isg-omcom-lf-cep-prioritizer:
-    config:
-      akka:
-        loglevel: INFO
-        stdout-loglevel: INFO
-      http:
-        port: 8080
-        host: "0.0.0.0"
-      dependencies:
-        cassandra:
-          host: "cassandra"
-          port: 9042
-    launcher_config:
-      jvm_options: "-Xms512m -Xmx1g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dump"
-      memory:
-        min: 512m
-        max: 1g
-    static_jobs:
-      jobs: []
