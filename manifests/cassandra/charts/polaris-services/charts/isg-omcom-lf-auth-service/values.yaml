@@ -15,3 +15,8 @@ deployment:
       cpu: 200m
       memory: 384Mi
   env: []
+  envFrom:
+    - secretRef:
+        name: lf-auth-service-configuration
+    - secretRef:
+        name: petal-keycloak-credentials
