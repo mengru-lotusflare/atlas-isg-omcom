@@ -1,0 +1,54 @@
+{{- range $chartName, $chart := .Subcharts }}
+{{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $appName }}
+  labels:
+    app.kubernetes.io/name: {{ $appName }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app: {{ $appName }}
+  {{- with $.Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+data:
+  config.lua: |
+    local cjson = require "cjson.safe"
+    local config = [[
+    {{- $.Values.config | mustToPrettyJson | nindent 4 }}
+    ]]
+
+    return setmetatable({}, {
+        __index = cjson.decode(config),
+    })
+
+  {{- if $.Values.extraServersConf }}
+  extra_servers_conf: |
+    {{ $.Values.extraServersConf | nindent 4 }}
+  {{- end }}
+
+{{- if $.Values.exposedPaths }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $appName }}-config-exposed-paths
+  labels:
+    app.kubernetes.io/name: {{ $appName }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app: {{ $appName }}
+    exposedPathsConfigMap: "true"
+  {{- with $.Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+data:
+  exposedPaths: |
+    {{ $.Values.exposedPaths | join " | " }}
+{{- end }}
+{{- end }}
+

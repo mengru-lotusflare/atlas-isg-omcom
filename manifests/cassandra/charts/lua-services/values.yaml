@@ -4,6 +4,10 @@ global:
 # Global configurations shared across all applications
 annotations: {}
 
+# -- Exposed path for external domain
+exposedPaths: []
+extraServersConf: ""
+
 # Global deployment defaults
 deploymentDefaults:
   replicaCount: 1
@@ -19,17 +23,18 @@ deploymentDefaults:
     limits:
       cpu: 500m
       memory: 256Mi
-  config:
-    operators:
-      - globecom
-      - globecomexternal
-
-    external_secret:
-      enabled: true
-      keys:
-        common:
-          - com.lotusflare.dno.braintree_prod.base_url
   env: []
+
+config:
+  operators:
+    - globecom
+    - globecomexternal
+
+  external_secret:
+    enabled: true
+    keys:
+      common:
+        - com.lotusflare.dno.braintree_prod.base_url
 
 # Global probe configurations
 livenessProbe:

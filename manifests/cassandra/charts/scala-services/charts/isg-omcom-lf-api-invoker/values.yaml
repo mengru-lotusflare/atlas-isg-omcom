@@ -5,12 +5,73 @@ deployment:
     repository: globe.jfrog.io/artifactory/isg-omcom-docker-local-nonprod/lf-apirequest
     tag: master-2025-06-03-0944-89cb7a8
     pullPolicy: IfNotPresent
-  containerPort: 8080
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 256Mi
-  env: []
+launcher_config: {}
+
+dependencies:
+  cassandra:
+    enabled: true
+  kafka:
+    enabled: true
+  redis:
+    enabled: true
+  jcm:
+    enabled: true
+
+config:
+  reserved-topic-names:
+    lf_raw_events_prioritized: event_multiplier_prioritized
+  multitenancy:
+    # !!! SUPER !!! MULTITENANT JOBS MUST BE ENABLED !!!  IMPORTANT !!!
+    multitenant-static-jobs: true
+    # !!! SUPER !!! MIGRATION MUST BE DISABLED !!!  IMPORTANT !!!
+    consumer-offset-migration: false
+  api-doc:
+    enabled: true
+    title: API Invoker API
+    version: v1
+    swagger-config:
+      enabled: true
+      route-prefix: swagger
+  akka:
+    kafka:
+      default-dispatcher:
+        executor: "thread-pool-executor"
+        thread-pool-executor:
+          fixed-pool-size: 64
+    coordinated-shutdown:
+      phases:
+        before-cluster-shutdown:
+          timeout: 60s
+      run-by-actor-system-terminate: "off"
+      run-by-jvm-shutdown-hook: "off"
+      terminate-actor-system: "off"
+    http:
+      client:
+        connecting-timeout: 1 minute
+        idle-timeout: 5 minutes
+        stream-cancellation-delay: 30 seconds
+      host-connection-pool:
+        client:
+          idle-timeout: infinite
+          stream-cancellation-delay: 30 seconds
+        response-entity-subscription-timeout: 30 seconds
+  consumer-actor-termination-timeout: 1 minute
+  consumer-drain-and-shutdown-timeout: 4 minutes
+  dead-letter-queue:
+    enabled: true
+  fork-join-scheduler:
+    max-threads: "128"
+    parallelism: "64"
+  kafka-helper:
+    default-create-topic-params:
+      partitions: 6
+      replication-factor: 2
+    topic-auto-creation:
+      enabled: true
+  parameter-store:
+    enabled: true
+  predefined-labels:
+    app: api-invoker
+  producer-product: DNO Platform
+  opentelemetry:
+    enabled: true

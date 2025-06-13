@@ -1,17 +1,37 @@
 # Application specific deployment configuration
-application:
 deployment:
   replicaCount: 1
   image:
     repository: globe.jfrog.io/artifactory/isg-omcom-docker-local-nonprod/lf-apirequest
     tag: master-2025-06-03-0944-89cb7a8
     pullPolicy: IfNotPresent
-  containerPort: 8080
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 256Mi
-  env: []
+  env:
+    - name: JAVA_OPTS
+      value: "-Xms512m -Xmx1g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dump"
+    - name: APP_NAME
+      value: "isg-omcom-lf-cep-prioritizer"
+    - name: CONFIG_FILE
+      value: "/app/application.conf"
+    - name: LAUNCHER_CONFIG_FILE
+      value: "/launcher-config.yaml"
+
+applications:
+  isg-omcom-lf-cep-prioritizer:
+    config:
+      akka:
+        loglevel: INFO
+        stdout-loglevel: INFO
+      http:
+        port: 8080
+        host: "0.0.0.0"
+      dependencies:
+        cassandra:
+          host: "cassandra"
+          port: 9042
+    launcher_config:
+      jvm_options: "-Xms512m -Xmx1g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dump"
+      memory:
+        min: 512m
+        max: 1g
+    static_jobs:
+      jobs: []

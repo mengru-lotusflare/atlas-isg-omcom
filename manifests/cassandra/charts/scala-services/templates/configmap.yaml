@@ -1,0 +1,95 @@
+{{- range $chartName, $chart := .Subcharts }}
+{{- if $chart.Values.deployment }}
+{{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $appName }}
+  labels:
+    app.kubernetes.io/name: {{ $appName }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app: {{ $appName }}
+  {{- with $.Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+data:
+  application_config.json: |
+    {{- $config := dict }}
+    {{- $config := merge $config (dict "clusters" (dict "cluster-name" "default")) }}
+    {{- if $chart.Values.config }}
+    {{- $config = merge $config $chart.Values.config }}
+    {{- else }}
+    {{- $config = merge $config $.Values.config }}
+    {{- end }}
+    {{- if $chart.Values.dependencies }}
+    {{- $config = merge $config (dict "dependencies" $chart.Values.dependencies) }}
+    {{- else }}
+    {{- $config = merge $config (dict "dependencies" $.Values.dependencies) }}
+    {{- end }}
+    {{- $config | toPrettyJson | nindent 4 }}
+
+  static_jobs.json: |
+    {{- $filteredJobs := dict }}
+    {{- if $chart.Values.jobs }}
+    {{- range $jobName, $jobConfig := $chart.Values.jobs }}
+      {{- if hasKey $jobConfig "enabled" }}
+        {{- if eq (toString $jobConfig.enabled) "true" }}
+          {{- $_ := set $filteredJobs $jobName $jobConfig }}
+        {{- end }}
+      {{- else }}
+          {{- $_ := set $filteredJobs $jobName $jobConfig }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- dict "jobs" $filteredJobs | toPrettyJson | nindent 4 }}
+
+  launcher_config.yaml: |
+    AppConf: /app/application.conf
+    DumpPath: /dump
+    {{- $jarName := $appName }}
+    {{- if and $chart.Values.overrides (hasKey $chart.Values.overrides "jarName") }}
+    {{- $jarName = $chart.Values.overrides.jarName }}
+    {{- else if and $.Values.overrides (hasKey $.Values.overrides "jarName") }}
+    {{- $jarName = $.Values.overrides.jarName }}
+    {{- end }}
+    Jar: /usr/share/java/{{ $jarName }}.jar
+    JvmOpts:
+      - "-XX:+ExitOnOutOfMemoryError"
+      - "-XX:+HeapDumpOnOutOfMemoryError"
+      {{- $launcherConfig := dict }}
+      {{- if $chart.Values.launcher_config }}
+      {{- $launcherConfig = $chart.Values.launcher_config }}
+      {{- else }}
+      {{- $launcherConfig = $.Values.launcher_config }}
+      {{- end }}
+      {{- if $launcherConfig.RAMPercentage }}
+      - "-XX:InitialRAMPercentage={{ $launcherConfig.RAMPercentage | float64 | printf "%.1f" }}"
+      - "-XX:MinRAMPercentage={{ $launcherConfig.RAMPercentage | float64 | printf "%.1f" }}"
+      - "-XX:MaxRAMPercentage={{ $launcherConfig.RAMPercentage | float64 | printf "%.1f" }}"
+      {{- else }}
+      - "-Xms{{ $launcherConfig.Xms }}"
+      - "-Xmx{{ $launcherConfig.Xmx }}"
+      {{- end }}
+      - "-Djava.rmi.server.hostname=127.0.0.1" # Requires kubectl port-forward access to pod
+      - "-Dcom.sun.management.jmxremote.authenticate=false"
+      - "-Dcom.sun.management.jmxremote.ssl=false"
+      - "-Dcom.sun.management.jmxremote.port={{ $launcherConfig.jmxremote_port }}"
+      - "-Dcom.sun.management.jmxremote.rmi.port={{ $launcherConfig.jmxremote_port }}"
+      - "-Dscala.concurrent.context.numThreads=4"
+      - "-Dscala.concurrent.context.minThreads=2"
+      - "-Dscala.concurrent.context.maxThreads=4"
+      - "-Dfile.encoding=UTF8"
+      - "-Dconfig.override_with_env_vars=true"
+      - "-Dcom.datastax.driver.FORCE_NIO=true"
+      {{- if $launcherConfig.jvm_options }}
+      {{- range $jvmOption := $launcherConfig.jvm_options }}
+      - {{ $jvmOption | quote }}
+      {{- end }}
+      {{- end }}
+    Logback: /app/logback.xml
+    Name: {{ $appName }}
+{{- end }}
+{{- end }}
