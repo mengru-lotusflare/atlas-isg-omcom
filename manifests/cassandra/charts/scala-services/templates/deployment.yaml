@@ -82,6 +82,10 @@ spec:
             - name: K8S_POD_ID
               valueFrom:
                 fieldRef:
+                  fieldPath: metadata.uid
+            - name: K8S_POD_NAME
+              valueFrom:
+                fieldRef:
                   fieldPath: metadata.name
             - name: IMAGE_TAG
               value: {{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion | quote }}
