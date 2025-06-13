@@ -13,4 +13,3 @@ deployment:
     limits:
       cpu: 200m
       memory: 384Mi
-  env: []
