@@ -1,4 +1,5 @@
-{{- range $name, $app := .Values.applications }}
+{{- range $name, $app := .Values }}
+{{- if and (not (hasPrefix "_" $name)) (not (hasPrefix "." $name)) (kindIs "map" $app) }}
 {{- if $app.deployment }}
 ---
 apiVersion: apps/v1
@@ -83,6 +84,7 @@ spec:
           {{- with $app.deployment.lifecycle }}
           lifecycle:
             {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
 {{- end }}
 {{- end }}

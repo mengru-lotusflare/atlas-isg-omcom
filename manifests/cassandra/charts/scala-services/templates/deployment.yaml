@@ -1,19 +1,6 @@
 {{- range $chartName, $chart := .Subcharts }}
 {{- if $chart.Values.deployment }}
-{{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
-{{- $externalSecretEnabled := false }}
-{{- if $chart.Values.deployment.config }}
-{{- if $chart.Values.deployment.config.external_secret }}
-{{- $externalSecretEnabled = $chart.Values.deployment.config.external_secret.enabled }}
-{{- end }}
-{{- end }}
-{{- if not $externalSecretEnabled }}
-{{- if $.Values.deploymentDefaults.config }}
-{{- if $.Values.deploymentDefaults.config.external_secret }}
-{{- $externalSecretEnabled = $.Values.deploymentDefaults.config.external_secret.enabled }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -25,12 +12,12 @@ metadata:
     app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app: {{ $appName }}
-  {{- with $.Values.annotations }}
+  {{- with $chart.Values.annotations | default $.Values.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  replicas: {{ $chart.Values.deployment.replicaCount | default $.Values.deploymentDefaults.replicaCount }}
+  replicas: {{ $chart.Values.deployment.replicaCount | default $.Values.deployment.replicaCount }}
   selector:
     matchLabels:
       app: {{ $appName }}
@@ -38,9 +25,13 @@ spec:
     metadata:
       labels:
         app: {{ $appName }}
-        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag }}
+        app.kubernetes.io/version: {{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion }}
+      {{- with $chart.Values.podAnnotations | default $.Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
-      {{- with $chart.Values.deployment.imagePullSecrets }}
+      {{- with $chart.Values.deployment.imagePullSecrets | default $.Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -62,7 +53,7 @@ spec:
       containers:
         - name: {{ $appName }}
           image: "{{ $chart.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion }}"
-          imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deploymentDefaults.image.pullPolicy }}
+          imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deployment.image.pullPolicy }}
           volumeMounts:
             - name: heap-dumps
               mountPath: /dump
@@ -82,27 +73,40 @@ spec:
             - name: data
               mountPath: /mnt
           resources:
-            {{- toYaml ($chart.Values.deployment.resources | default $.Values.deploymentDefaults.resources) | nindent 12 }}
+            {{- if $chart.Values.deployment.resources }}
+            {{- toYaml $chart.Values.deployment.resources | nindent 12 }}
+            {{- else if $.Values.deployment.resources }}
+            {{- toYaml $.Values.deployment.resources | nindent 12 }}
+            {{- end }}
           env:
             - name: K8S_POD_ID
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
             - name: IMAGE_TAG
-              value: {{ $chart.Values.deployment.image.tag | quote }}
-            {{- with ($chart.Values.deployment.env | default $.Values.deploymentDefaults.env) }}
-            {{- toYaml . | nindent 12 }}
+              value: {{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion | quote }}
+            {{- if $chart.Values.deployment.env }}
+            {{- toYaml $chart.Values.deployment.env | nindent 12 }}
+            {{- else if $.Values.deployment.env }}
+            {{- toYaml $.Values.deployment.env | nindent 12 }}
             {{- end }}
           ports:
             - name: http
-              containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deploymentDefaults.containerPort }}
-          {{- with $.Values.livenessProbe }}
+              containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deployment.containerPort }}
+              protocol: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.protocol }}{{ else }}{{ $.Values.service.protocol }}{{ end }}
+          {{- if $chart.Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml . | nindent 12 }}
+            {{- toYaml $chart.Values.livenessProbe | nindent 12 }}
+          {{- else if $.Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml $.Values.livenessProbe | nindent 12 }}
           {{- end }}
-          {{- with $.Values.readinessProbe }}
+          {{- if $chart.Values.readinessProbe }}
           readinessProbe:
-            {{- toYaml . | nindent 12 }}
+            {{- toYaml $chart.Values.readinessProbe | nindent 12 }}
+          {{- else if $.Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml $.Values.readinessProbe | nindent 12 }}
           {{- end }}
 {{- end }}
 {{- end }}
