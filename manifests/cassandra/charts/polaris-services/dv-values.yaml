@@ -1,5 +1,2 @@
 global:
   appName: isg-omcom
-  env:
-    MESSAGE_ENABLE: "true"
-    LOG_LEVEL: info

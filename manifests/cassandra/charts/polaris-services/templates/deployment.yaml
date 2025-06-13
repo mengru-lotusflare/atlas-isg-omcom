@@ -8,9 +8,9 @@
 {{- end }}
 {{- end }}
 {{- if not $externalSecretEnabled }}
-{{- if $.Values.deploymentDefaults.config }}
-{{- if $.Values.deploymentDefaults.config.external_secret }}
-{{- $externalSecretEnabled = $.Values.deploymentDefaults.config.external_secret.enabled }}
+{{- if $.Values.deployment.config }}
+{{- if $.Values.deployment.config.external_secret }}
+{{- $externalSecretEnabled = $.Values.deployment.config.external_secret.enabled }}
 {{- end }}
 {{- end }}
 {{- end }}
@@ -30,7 +30,7 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  replicas: {{ $chart.Values.deployment.replicaCount | default $.Values.deploymentDefaults.replicaCount }}
+  replicas: {{ $chart.Values.deployment.replicaCount | default $.Values.deployment.replicaCount }}
   selector:
     matchLabels:
       app: {{ $appName }}
@@ -58,7 +58,7 @@ spec:
       containers:
         - name: {{ $appName }}
           image: "{{ $chart.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion }}"
-          imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deploymentDefaults.image.pullPolicy }}
+          imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deployment.image.pullPolicy }}
           volumeMounts:
             - name: tmp-volume
               mountPath: /tmp
@@ -71,7 +71,7 @@ spec:
             {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
             {{- end }}
           resources:
-            {{- toYaml ($chart.Values.deployment.resources | default $.Values.deploymentDefaults.resources) | nindent 12 }}
+            {{- toYaml ($chart.Values.deployment.resources | default $.Values.deployment.resources) | nindent 12 }}
           env:
             - name: K8S_POD_ID
               valueFrom:
@@ -94,7 +94,7 @@ spec:
           {{- end }}  
           ports:
             - name: http
-              containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deploymentDefaults.containerPort }}
+              containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deployment.containerPort }}
           {{- with $.Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

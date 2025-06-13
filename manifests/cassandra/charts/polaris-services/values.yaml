@@ -4,8 +4,8 @@ global:
 # Global configurations shared across all applications
 annotations: {}
 
-# Global deployment defaults
-deploymentDefaults:
+# Global deployment
+deployment:
   replicaCount: 1
   imagePullSecrets:
     - name: isg-omcom-dv-jfrog-secret
@@ -19,7 +19,9 @@ deploymentDefaults:
     limits:
       cpu: 500m
       memory: 256Mi
-  env: []
+  env:
+    MESSAGE_ENABLE: "true"
+    LOG_LEVEL: info
 
 # Global probe configurations
 livenessProbe:
