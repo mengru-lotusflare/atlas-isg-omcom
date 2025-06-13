@@ -15,23 +15,109 @@ deployment:
     - name: LAUNCHER_CONFIG_FILE
       value: "/launcher-config.yaml"
 
-applications:
-  isg-omcom-lf-cep-prioritizer:
-    config:
-      akka:
-        loglevel: INFO
-        stdout-loglevel: INFO
-      http:
-        port: 8080
-        host: "0.0.0.0"
-      dependencies:
-        cassandra:
-          host: "cassandra"
-          port: 9042
-    launcher_config:
-      jvm_options: "-Xms512m -Xmx1g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dump"
-      memory:
-        min: 512m
-        max: 1g
-    static_jobs:
-      jobs: []
+overrides:
+  jarName: lf-prioritizer
+
+config:
+  consumer:
+    circuit-breaker:
+      enabled: true
+      failure-threshold-percent: 50
+      window-size-seconds: 60
+      wait-duration: 10 seconds
+      minimum-number-of-calls: 10
+      max-delays-in-one-try: 10
+    consumer-recovery:
+      delay-before-restart: 15s
+      enabled: true
+      max-restarts: 10
+    message-retry:
+      enabled: false
+      backoff-multiplier: 0
+      dead-letter-topic: ""
+      initial-delay-millis: 0
+      max-delay-millis: 0
+      max-retries: 0
+      retry-topic-suffix: ""
+    parallelism: 10
+  http:
+    host: 0.0.0.0
+    port: 8080
+
+  prioritizer-consumers:
+    - name: "notification-sms"
+      priorities-number: 5
+      unprioritized-topics:
+        - "lf_cep_notification_action_based_sms_v2"
+        - "lf_cep_notification_scheduled_sms_v2"
+      target-topic: "lf_cep_notification_sms"
+      priority-topics-prefix: "lf_cep_notification_sms"
+      dead-letter-topic: "lf_cep_notification_sms_dlq"
+      max-target-rate-per-second-per-pod: 200
+      deduplication-key-json-query: "$.transaction_id"
+      deduplication-enabled: true
+      distributed-rate-limit-config:
+        max-total-rate-per-second: 400
+        sync-interval-seconds: 5
+        max-instances: 2
+    - name: "notification-email"
+      priorities-number: 5
+      unprioritized-topics:
+        - "lf_cep_notification_action_based_email_v2"
+        - "lf_cep_notification_scheduled_email_v2"
+      target-topic: "lf_cep_notification_email"
+      priority-topics-prefix: "lf_cep_notification_email"
+      dead-letter-topic: "lf_cep_notification_email_dlq"
+      max-target-rate-per-second-per-pod: 200
+      deduplication-key-json-query: "$.transaction_id"
+      deduplication-enabled: true
+      distributed-rate-limit-config:
+        max-total-rate-per-second: 400
+        sync-interval-seconds: 5
+        max-instances: 2
+    - name: "notification-push"
+      priorities-number: 5
+      unprioritized-topics:
+        - "lf_cep_notification_action_based_push_v2"
+        - "lf_cep_notification_scheduled_push_v2"
+      target-topic: "lf_cep_notification_push"
+      priority-topics-prefix: "lf_cep_notification_push"
+      dead-letter-topic: "lf_cep_notification_push_dlq"
+      max-target-rate-per-second-per-pod: 45
+      deduplication-key-json-query: "$.transaction_id"
+      deduplication-enabled: true
+      distributed-rate-limit-config:
+        max-total-rate-per-second: 90
+        sync-interval-seconds: 5
+        max-instances: 2
+    - name: "notification-ott"
+      priorities-number: 5
+      unprioritized-topics:
+        - "lf_cep_notification_action_based_ott_v2"
+        - "lf_cep_notification_scheduled_ott_v2"
+      target-topic: "lf_cep_notification_ott"
+      priority-topics-prefix: "lf_cep_notification_ott"
+      dead-letter-topic: "lf_cep_notification_ott_dlq"
+      max-target-rate-per-second-per-pod: 500
+      deduplication-enabled: false
+      distributed-rate-limit-config:
+        max-total-rate-per-second: 400
+        sync-interval-seconds: 5
+        max-instances: 2
+    - name: "notification-whatsapp"
+      priorities-number: 5
+      unprioritized-topics:
+        - "lf_cep_notification_action_based_whatsapp_v2"
+        - "lf_cep_notification_scheduled_whatsapp_v2"
+      target-topic: "lf_cep_notification_whatsapp"
+      priority-topics-prefix: "lf_cep_notification_whatsapp"
+      dead-letter-topic: "lf_cep_notification_whatsapp_dlq"
+      max-target-rate-per-second-per-pod: 100
+      deduplication-key-json-query: "$.transaction_id"
+      deduplication-enabled: true
+
+  service-name: "cep-prioritizer"
+  distributed-message-deduplication:
+    enabled: true
+    replication-factor: 3
+    trigger-duration: 5 minutes

@@ -17,6 +17,9 @@ dependencies:
   jcm:
     enabled: true
 
+overrides:
+  jarName: lf-api-invoker
+
 config:
   reserved-topic-names:
     lf_raw_events_prioritized: event_multiplier_prioritized
@@ -73,5 +76,3 @@ config:
   predefined-labels:
     app: api-invoker
   producer-product: DNO Platform
-  opentelemetry:
-    enabled: true
