@@ -1,0 +1,92 @@
+{{- range $chartName, $chart := .Subcharts }}
+{{- if $chart.Values.deployment }}
+{{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
+{{- $externalSecretEnabled := false }}
+{{- if $chart.Values.deployment.config }}
+{{- if $chart.Values.deployment.config.external_secret }}
+{{- $externalSecretEnabled = $chart.Values.deployment.config.external_secret.enabled }}
+{{- end }}
+{{- end }}
+{{- if not $externalSecretEnabled }}
+{{- if $.Values.deploymentDefaults.config }}
+{{- if $.Values.deploymentDefaults.config.external_secret }}
+{{- $externalSecretEnabled = $.Values.deploymentDefaults.config.external_secret.enabled }}
+{{- end }}
+{{- end }}
+{{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $appName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $appName }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+    app: {{ $appName }}
+  {{- with $.Values.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ $chart.Values.deployment.replicaCount | default $.Values.deploymentDefaults.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ $appName }}
+        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag }}
+    spec:
+      {{- with $chart.Values.deployment.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: tmp-volume
+          emptyDir: {}
+        {{- if $externalSecretEnabled }}
+        - name: external-secret-volume
+          secret:
+            secretName: {{ $appName }}-secret
+        {{- end }}
+      containers:
+        - name: {{ $appName }}
+          image: "{{ $chart.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion }}"
+          imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deploymentDefaults.image.pullPolicy }}
+          volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+            {{- if $externalSecretEnabled }}
+            - name: external-secret-volume
+              mountPath: /mnt/lua/secrets.lua
+              subPath: secrets.lua
+              readOnly: true
+            {{- end }}
+          resources:
+            {{- toYaml ($chart.Values.deployment.resources | default $.Values.deploymentDefaults.resources) | nindent 12 }}
+          env:
+            - name: K8S_POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: IMAGE_TAG
+              value: {{ $chart.Values.deployment.image.tag | quote }}
+            {{- with ($chart.Values.deployment.env | default $.Values.deploymentDefaults.env) }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deploymentDefaults.containerPort }}
+          {{- with $.Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
+{{- end }}
