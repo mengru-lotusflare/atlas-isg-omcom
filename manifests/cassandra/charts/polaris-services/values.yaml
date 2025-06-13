@@ -19,9 +19,6 @@ deployment:
     limits:
       cpu: 500m
       memory: 256Mi
-  extraEnv:
-    MESSAGE_ENABLE: "true"
-    LOG_LEVEL: info
 
 # Global probe configurations
 livenessProbe:
