@@ -20,8 +20,8 @@ deployment:
       cpu: 500m
       memory: 256Mi
   env:
-    MESSAGE_ENABLE: "true"
-    LOG_LEVEL: info
+    AUTO_RUN_DB_MIGRATIONS: "true"
+    TYPE_ORM_SYNCHRONIZE: "false"
 
 # Global probe configurations
 livenessProbe:
