@@ -1,4 +1,5 @@
 {{- if .Values.ingress.internal.enabled }}
+{{- range $chartName, $chart := .Subcharts }}
 {{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
 ---
 apiVersion: networking.k8s.io/v1
