@@ -1,13 +1,11 @@
 {{- range $chartName, $chart := .Subcharts }}
 {{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
-{{- $serviceType := $.Values.ingress.type }}
 {{- $servicePort := $.Values.ingress.port }}
 {{- $serviceTargetPort := $.Values.ingress.targetPort }}
 {{- $serviceProtocol := $.Values.ingress.protocol }}
 {{- $servicePortName := $.Values.ingress.portName }}
 
 {{- if $chart.Values.service }}
-{{- if $chart.Values.service.type }}{{ $serviceType = $chart.Values.ingress.type }}{{ end }}
 {{- if $chart.Values.service.port }}{{ $servicePort = $chart.Values.ingress.port }}{{ end }}
 {{- if $chart.Values.service.targetPort }}{{ $serviceTargetPort = $chart.Values.ingress.targetPort }}{{ end }}
 {{- if $chart.Values.service.protocol }}{{ $serviceProtocol = $chart.Values.ingress.protocol }}{{ end }}
