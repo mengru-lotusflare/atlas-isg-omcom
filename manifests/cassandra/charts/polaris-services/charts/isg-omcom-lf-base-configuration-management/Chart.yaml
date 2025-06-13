@@ -1,0 +1,5 @@
+apiVersion: v2
+name: isg-omcom-lf-base-configuration-management
+description: Helm chart for ISG OMCOM Cassandra ScalaServices lf-base-configuration-management
+version: 0.1.0
+appVersion: "1.0"
