@@ -45,9 +45,9 @@ serviceDefaults:
   targetPort: 8080
 externalSecret:
   enabled: true
-  refreshInterval: 1h
+  refreshInterval: 5m
   data:
-    - secretKey: com_lotusflare_dno_braintree_prod_base_url
+    - secretKey: /tmfc/configuration/service
       remoteRef:
-        key: isg/omcom/dv/cassandra/app/lua/secret-sm
-        property: com.lotusflare.dno.braintree_prod.base_url
+        key: isg/omcom/dv/cassandra/app/polaris/secret-sm
+        property: /tmfc/configuration/service
