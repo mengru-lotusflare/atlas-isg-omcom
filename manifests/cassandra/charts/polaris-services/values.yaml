@@ -19,7 +19,7 @@ deployment:
     limits:
       cpu: 500m
       memory: 256Mi
-  env:
+  extraEnv:
     MESSAGE_ENABLE: "true"
     LOG_LEVEL: info
 
