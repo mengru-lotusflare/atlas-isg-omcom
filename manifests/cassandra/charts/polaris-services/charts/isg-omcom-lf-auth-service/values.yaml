@@ -1,5 +1,4 @@
 # Application specific deployment configuration
-application:
 deployment:
   replicaCount: 1
   image:

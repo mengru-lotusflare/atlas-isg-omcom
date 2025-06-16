@@ -1,5 +1,5 @@
 apiVersion: v2
-name: isg-omcom-lf-auth-service
-description: Helm chart for ISG OMCOM Cassandra ScalaServices lf-auth-service
+name: isg-omcom-cassandra-polaris-services
+description: Helm chart for ISG OMCOM Cassandra PolarisServices
 version: 0.1.0
 appVersion: "1.0"
