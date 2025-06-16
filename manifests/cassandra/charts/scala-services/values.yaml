@@ -122,3 +122,7 @@ dependencies:
     enabled: false
   jcm:
     enabled: false
+
+nodeSelector:
+  group-name: worker-group-lfapps
+  node-type: worker

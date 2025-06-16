@@ -25,6 +25,10 @@ deployment:
       memory: 256Mi
   env: []
 
+nodeSelector:
+  group-name: worker-group-lfapps
+  node-type: worker
+
 config:
   operators:
     - globecom
