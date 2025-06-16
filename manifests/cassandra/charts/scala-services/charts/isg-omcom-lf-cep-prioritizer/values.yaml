@@ -1,8 +1,8 @@
 # Application specific deployment configuration
 deployment:
   image:
-    repository: globe.pe.jfrog.io/isg-omcom-docker-local-nonprod/isg-omcom/dv/lf-apirequest
-    tag: master-2025-06-03-0944-89cb7a8
+    repository: globe.pe.jfrog.io/isg-omcom-docker-local-nonprod/isg-omcom/dv/lf-cep-prioritizer
+    tag: master-2025-06-11-0839-a2f2fa7
     pullPolicy: IfNotPresent
   env:
     - name: JAVA_OPTS
