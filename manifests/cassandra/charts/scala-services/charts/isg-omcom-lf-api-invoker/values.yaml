@@ -1,6 +1,5 @@
 # Application specific deployment configuration
 deployment:
-  replicaCount: 1
   image:
     repository: globe.jfrog.io/artifactory/isg-omcom-docker-local-nonprod/lf-apirequest
     tag: master-2025-06-03-0944-89cb7a8
