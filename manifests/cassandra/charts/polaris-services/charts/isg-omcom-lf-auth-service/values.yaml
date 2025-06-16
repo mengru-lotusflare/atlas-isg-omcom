@@ -1,4 +1,7 @@
 # Application specific deployment configuration
+global:
+  appName: isg-omcom
+
 deployment:
   replicaCount: 1
   image:
