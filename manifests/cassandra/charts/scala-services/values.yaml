@@ -45,6 +45,8 @@ overrides:
   jarName: ""
 
 config:
+  opentelemetry:
+    enabled: false
   akka:
     http: # used by Alpakka S3
       client:
