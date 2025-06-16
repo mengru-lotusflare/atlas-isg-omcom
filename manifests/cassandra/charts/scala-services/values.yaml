@@ -8,7 +8,7 @@ annotations: {}
 deployment:
   replicaCount: 1
   imagePullSecrets:
-    - name: isg-omcom-dv-jfrog-secret
+    - name: ecr-secret
   image:
     pullPolicy: IfNotPresent
   containerPort: 8080
