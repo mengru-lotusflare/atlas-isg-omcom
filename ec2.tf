@@ -13,7 +13,7 @@ module "ec2_standalone_module" {
 
   # uses workload AMI
   ami = {
-    is_soe = false
+    is_soe = true
     name   = "atlas-amazonlinux2"
     build  = "149" # Enter value
   }
