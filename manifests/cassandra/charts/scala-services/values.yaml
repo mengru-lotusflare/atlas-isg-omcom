@@ -112,3 +112,13 @@ launcher_config:
     - "-XX:MaxGCPauseMillis=10"
 
 jobs: {}
+
+dependencies:
+  cassandra:
+    enabled: false
+  kafka:
+    enabled: false
+  redis:
+    enabled: false
+  jcm:
+    enabled: false

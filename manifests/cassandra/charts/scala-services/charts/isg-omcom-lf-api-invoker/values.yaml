@@ -6,16 +6,6 @@ deployment:
     pullPolicy: IfNotPresent
 launcher_config: {}
 
-dependencies:
-  cassandra:
-    enabled: true
-  kafka:
-    enabled: true
-  redis:
-    enabled: true
-  jcm:
-    enabled: true
-
 overrides:
   jarName: lf-api-invoker
 
