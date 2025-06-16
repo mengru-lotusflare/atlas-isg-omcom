@@ -1,7 +1,7 @@
 # Application specific deployment configuration
 deployment:
   image:
-    repository: globe.pe.jfrog.io/artifactory/isg-omcom-docker-local-nonprod/lf-apirequest
+    repository: globe.pe.jfrog.io/isg-omcom-docker-local-nonprod/isg-omcom/dv/lf-apirequest
     tag: master-2025-06-09-1434-a4a9508
     pullPolicy: IfNotPresent
 launcher_config: {}
