@@ -96,9 +96,10 @@ spec:
               value: {{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion | quote }}
             {{- if $chart.Values.deployment.env }}
             {{- toYaml $chart.Values.deployment.env | nindent 12 }}
-            {{- else if $.Values.deployment.env }}
+            {{- end }}  <!-- ADDED THIS END -->
+            {{- if $.Values.deployment.env }}
             {{- toYaml $.Values.deployment.env | nindent 12 }}
-            {{- end }}
+            {{- end }}  <!-- ADDED THIS END -->
           ports:
             - name: http
               containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deployment.containerPort }}
