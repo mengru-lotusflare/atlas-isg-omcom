@@ -1,6 +1,8 @@
+{{- $selected := .Values.subchart | default "" }}
 {{- range $chartName, $chart := .Subcharts }}
-{{- if $chart.Values.config }} # Check if this subchart wants a configmap
-{{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
+  {{- if or (eq $selected "") (eq $chartName $selected) }}
+    {{- if $chart.Values.config }}
+      {{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -78,5 +80,5 @@ data:
       {{- end }}
       {{- end }}
     Name: {{ $appName }}
-{{- end }}
+  {{- end }}
 {{- end }}

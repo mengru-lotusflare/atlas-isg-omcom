@@ -1,6 +1,8 @@
+{{- $selected := .Values.subchart | default "" }}
 {{- range $chartName, $chart := .Subcharts }}
-{{- if $chart.Values.deployment }}
-{{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
+  {{- if or (eq $selected "") (eq $chartName $selected) }}
+    {{- if $chart.Values.deployment }}
+      {{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -115,5 +117,5 @@ spec:
           readinessProbe:
             {{- toYaml $.Values.readinessProbe | nindent 12 }}
           {{- end }}
-{{- end }}
+  {{- end }}
 {{- end }}
