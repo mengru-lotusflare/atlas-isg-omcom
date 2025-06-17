@@ -1,6 +1,8 @@
+{{- $selected := .Values.subchart | default "" }}
 {{- range $chartName, $chart := .Subcharts }}
-{{- if $chart.Values.config }}
-{{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
+  {{- if or (eq $selected "") (eq $chartName $selected) }}
+    {{- if $chart.Values.config }}
+      {{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -23,26 +25,26 @@ data:
     {{- $fileContent | nindent 4 }}
   {{- end }}
   {{- end }}
-  
+
   {{- if or $chart.Values.config $.Values.config }}
   lua_config.json: |
     {{- $config := dict }}
-    
+
     {{- if $chart.Values.config }}
     {{- $config = merge $config $chart.Values.config }}
     {{- else }}
     {{- $config = merge $config $.Values.config }}
     {{- end }}
-    
+
     {{- if $chart.Values.dependencies }}
     {{- $config = merge $config (dict "dependencies" $chart.Values.dependencies) }}
     {{- else if $.Values.dependencies }}
     {{- $config = merge $config (dict "dependencies" $.Values.dependencies) }}
     {{- end }}
-    
+
     {{- $config | toPrettyJson | nindent 4 }}
   {{- end }}
-  
+
   {{- if $chart.Values.nginx }}
   nginx.conf: |
     {{- $chart.Values.nginx | nindent 4 }}
@@ -50,6 +52,6 @@ data:
   nginx.conf: |
     {{- $.Values.nginx | nindent 4 }}
   {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}
-{{- end }}
-

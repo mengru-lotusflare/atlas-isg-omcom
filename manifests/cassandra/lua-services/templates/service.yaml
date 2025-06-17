@@ -1,5 +1,7 @@
+{{- $selected := .Values.subchart | default "" }}
 {{- range $chartName, $chart := .Subcharts }}
-{{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
+  {{- if or (eq $selected "") (eq $chartName $selected) }}
+    {{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
 ---
 apiVersion: v1
 kind: Service
@@ -25,4 +27,5 @@ spec:
       name: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.portName }}{{ else }}{{ $.Values.service.portName }}{{ end }}
   selector:
     app: {{ $appName }}
+  {{- end }}
 {{- end }}
