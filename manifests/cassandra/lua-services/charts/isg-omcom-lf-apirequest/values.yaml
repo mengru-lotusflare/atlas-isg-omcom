@@ -15,16 +15,4 @@ config:
       common:
         - com.lotusflare.dno.braintree_prod.base_url
 
-externalSecret:
-  enabled: true
-  annotations: {}
-  refreshInterval: 1h
-  secretStoreRef:
-    name: aws-secrets-manager-store
-    kind: ClusterSecretStore
-  data:
-    - secretKey: com_lotusflare_dno_braintree_prod_base_url
-      remoteRef:
-        key: isg/omcom/dv/cassandra/app/lua/secret-sm
-        property: com.lotusflare.dno.braintree_prod.base_url
-
+externalSecret: {}
