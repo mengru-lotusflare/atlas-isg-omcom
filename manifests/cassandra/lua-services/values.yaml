@@ -46,6 +46,17 @@ service:
   port: 80
   targetPort: 8080
 
+config:
+  operators:
+    - globecom
+    - globecomexternal
+
+  external_secret:
+    enabled: true
+    keys:
+      common:
+        - com.lotusflare.dno.braintree_prod.base_url
+
 externalSecret:
   enabled: true
   annotations: {}

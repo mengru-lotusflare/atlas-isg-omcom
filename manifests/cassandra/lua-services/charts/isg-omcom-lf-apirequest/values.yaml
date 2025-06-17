@@ -4,15 +4,9 @@ deployment:
     tag: master-2025-06-09-2000-e369c06
     pullPolicy: IfNotPresent
 
-config:
-  operators:
-    - globecom
-    - globecomexternal
+config: {}
 
-  external_secret:
-    enabled: true
-    keys:
-      common:
-        - com.lotusflare.dno.braintree_prod.base_url
-
-externalSecret: {}
+externalSecret:
+  secretStoreRef:
+    name: aws-secrets-manager-store
+    kind: ClusterSecretStore

@@ -8,15 +8,9 @@ deployment:
 externalSecret:
   annotations: {}
 
-config:
-  operators:
-    - globecom
-    - globecomexternal
+config: {}
 
-  external_secret:
-    enabled: true
-    keys:
-      common:
-        - com.lotusflare.dno.braintree_prod.base_url
-
-externalSecret: {}
+externalSecret:
+  secretStoreRef:
+    name: aws-secrets-manager-store
+    kind: ClusterSecretStore
