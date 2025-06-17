@@ -5,12 +5,4 @@ deployment:
     tag: master-2025-06-09-2000-e369c06
     pullPolicy: IfNotPresent
 
-externalSecret:
-  annotations: {}
-
 config: {}
-
-externalSecret:
-  secretStoreRef:
-    name: aws-secrets-manager-store
-    kind: ClusterSecretStore

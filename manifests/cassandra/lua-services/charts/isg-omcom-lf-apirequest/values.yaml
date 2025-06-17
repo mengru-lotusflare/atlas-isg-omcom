@@ -5,8 +5,3 @@ deployment:
     pullPolicy: IfNotPresent
 
 config: {}
-
-externalSecret:
-  secretStoreRef:
-    name: aws-secrets-manager-store
-    kind: ClusterSecretStore
