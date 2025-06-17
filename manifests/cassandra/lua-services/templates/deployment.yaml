@@ -47,7 +47,7 @@ spec:
         - name: tmp-volume
           emptyDir: {}
         {{- $externalSecretEnabled := false }}
-        {{- $externalSecretConfig := $chart.Values.deployment.config.external_secret | default $.Values.deployment.config.external_secret }}
+        {{- $externalSecretConfig := $chart.Values.config.external_secret | default $.Values.config.external_secret }}
         {{- if $externalSecretConfig }}
         {{- if eq ($externalSecretConfig.enabled | toString) "true" }}
         {{- $externalSecretEnabled = true }}
