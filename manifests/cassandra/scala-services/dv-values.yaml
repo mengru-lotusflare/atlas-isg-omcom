@@ -3,4 +3,7 @@ global:
 
 deployment:
   imagePullSecrets:
-      - name: isg-omcom-dv-jfrog-secret
+      - name: ecr-secret
+nodeSelector:
+  group-name: worker-group-lfapps
+  node-type: worker

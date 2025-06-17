@@ -62,8 +62,8 @@ externalSecret:
   annotations: {}
   refreshInterval: 1h
   secretStoreRef:
-    name: isg-omcom-dv-cassandra-app-lua-secret-sm
-    kind: SecretStore
+    name: aws-secrets-manager-store
+    kind: ClusterSecretStore
   data:
     - secretKey: com_lotusflare_dno_braintree_prod_base_url
       remoteRef:

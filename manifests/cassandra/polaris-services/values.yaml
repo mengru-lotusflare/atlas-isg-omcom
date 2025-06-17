@@ -48,8 +48,8 @@ externalSecret:
   enabled: true
   refreshInterval: 5m
   secretStoreRef:
-    name: isg-omcom-dv-cassandra-app-lua-secret-sm
-    kind: SecretStore
+    name: aws-secrets-manager-store
+    kind: ClusterSecretStore
   data:
     - secretKey: tmfc_configuration_service
       remoteRef:
