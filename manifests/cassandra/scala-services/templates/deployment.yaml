@@ -14,7 +14,7 @@ metadata:
     app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app: {{ $appName }}
-  {{- with $chart.Values.annotations | default $.Values.annotations }}
+  {{- with $.Values.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -27,96 +27,80 @@ spec:
     metadata:
       labels:
         app: {{ $appName }}
-        app.kubernetes.io/version: {{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion }}
-      {{- with $chart.Values.podAnnotations | default $.Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        lotusflare.com/tag: {{ $chart.Values.deployment.image.tag }}
     spec:
-      {{- with $chart.Values.deployment.imagePullSecrets | default $.Values.deployment.imagePullSecrets }}
+      {{- with $chart.Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
-        - emptyDir: {}
-          name: heap-dumps
-        - emptyDir: {}
-          name: tmp
-        - emptyDir: {}
-          name: logs
-        - configMap:
-            defaultMode: 420
-            name: {{ $appName }}
-          name: config
-        - configMap:
-            defaultMode: 420
-            name: {{ $appName }}
-          name: default-config
-        - emptyDir: {}
-          name: data
+        - name: tmp-volume
+          emptyDir: {}
+        {{- if $externalSecretEnabled }}
+        - name: external-secret-volume
+          secret:
+            secretName: {{ $appName }}-secret
+        {{- end }}
+        {{- if and .Values.extraVolumes .Values.extraVolumeMounts }}
+        {{- toYaml .Values.extraVolumes | nindent 8 }}
+        {{- end }}
       containers:
         - name: {{ $appName }}
           image: "{{ $chart.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deployment.image.pullPolicy }}
-          command: [ "/launcher" ]
           volumeMounts:
-            - mountPath: /dump
-              name: heap-dumps
-            - mountPath: /tmp
-              name: tmp
-            - mountPath: /logs
-              name: logs
-            - mountPath: /app/application.conf
-              name: config
-              subPath: application_config.json
-            - mountPath: /app/static_jobs.json
-              name: default-config
-              subPath: static_jobs.json
-            - mountPath: /launcher-config.yaml
-              name: config
-              subPath: launcher_config.yaml
-            - mountPath: /mnt
-              name: data
-          resources:
-            {{- if $chart.Values.deployment.resources }}
-            {{- toYaml $chart.Values.deployment.resources | nindent 12 }}
-            {{- else if $.Values.deployment.resources }}
-            {{- toYaml $.Values.deployment.resources | nindent 12 }}
+            - name: tmp-volume
+              mountPath: /tmp
+            {{- if .Values.secrets }}
+            - name: secrets
+              mountPath: /etc/nginx/secrets
+              readOnly: true
             {{- end }}
+            {{- if .Values.extraVolumeMounts }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+          resources:
+            {{- toYaml ($chart.Values.deployment.resources | default $.Values.deployment.resources) | nindent 12 }}
           env:
             - name: K8S_POD_ID
               valueFrom:
                 fieldRef:
-                  fieldPath: metadata.uid
-            - name: K8S_POD_NAME
-              valueFrom:
-                fieldRef:
                   fieldPath: metadata.name
             - name: IMAGE_TAG
-              value: {{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion | quote }}
-            {{- if $chart.Values.deployment.env }}
-            {{- toYaml $chart.Values.deployment.env | nindent 12 }}
-            {{- end }}  <!-- ADDED THIS END -->
-            {{- if $.Values.deployment.env }}
-            {{- toYaml $.Values.deployment.env | nindent 12 }}
-            {{- end }}  <!-- ADDED THIS END -->
+              value: {{ $chart.Values.deployment.image.tag | quote }}
+            {{- range $key, $value := ($chart.Values.deployment.env | default $.Values.deployment.env) | default dict }}
+            - name: {{ $key }}
+              {{- if kindIs "string" $value }}
+              value: {{ $value | quote }}
+              {{- else if kindIs "map" $value }}
+              {{ toYaml $value | nindent 14 }}
+              {{- else }}
+              {{- end }}
+            {{- end }}
+            {{- range $key, $value := ($chart.Values.deployment.extraEnv | default $.Values.deployment.extraEnv) | default dict }}
+            - name: {{ $key }}
+              {{- if kindIs "string" $value }}
+              value: {{ $value | quote }}
+              {{- else if kindIs "map" $value }}
+              {{ toYaml $value | nindent 14 }}
+              {{- else }}
+              {{- end }}
+            {{- end }}
+          {{- if .Values.deployment.envFrom }}
+          envFrom:
+            {{- toYaml .Values.deployment.envFrom | nindent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deployment.containerPort }}
-              protocol: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.protocol }}{{ else }}{{ $.Values.service.protocol }}{{ end }}
-          {{- if $chart.Values.livenessProbe }}
+          {{- with $.Values.livenessProbe }}
           livenessProbe:
-            {{- toYaml $chart.Values.livenessProbe | nindent 12 }}
-          {{- else if $.Values.livenessProbe }}
-          livenessProbe:
-            {{- toYaml $.Values.livenessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if $chart.Values.readinessProbe }}
+          {{- with $.Values.readinessProbe }}
           readinessProbe:
-            {{- toYaml $chart.Values.readinessProbe | nindent 12 }}
-          {{- else if $.Values.readinessProbe }}
-          readinessProbe:
-            {{- toYaml $.Values.readinessProbe | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
           {{- end }}
+    {{- end }}
   {{- end }}
 {{- end }}
