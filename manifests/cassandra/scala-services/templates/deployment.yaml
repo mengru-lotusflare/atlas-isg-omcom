@@ -30,7 +30,10 @@ spec:
         app: {{ $appName }}
         lotusflare.com/tag: {{ $chart.Values.deployment.image.tag }}
     spec:
-      {{- with $chart.Values.deployment.imagePullSecrets }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $chart.Values.deployment.imagePullSecrets | default $.Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
