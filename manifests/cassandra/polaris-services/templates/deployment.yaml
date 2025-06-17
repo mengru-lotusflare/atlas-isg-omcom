@@ -2,7 +2,7 @@
 {{- range $chartName, $chart := .Subcharts }}
   {{- if or (eq $selected "") (eq $chartName $selected) }}
     {{- if $chart.Values.deployment }}
-      {{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
+      {{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
 ---
 apiVersion: apps/v1
 kind: Deployment
