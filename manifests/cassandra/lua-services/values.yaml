@@ -48,6 +48,7 @@ service:
 
 externalSecret:
   enabled: true
+  annotations: {}
   refreshInterval: 1h
   secretStoreRef:
     name: aws-secrets-manager-store
