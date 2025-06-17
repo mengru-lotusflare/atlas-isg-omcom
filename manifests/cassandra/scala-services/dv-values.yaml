@@ -3,4 +3,9 @@ global:
 
 deployment:
   imagePullSecrets:
+<<<<<<< HEAD
       - name: isg-omcom-dv-jfrog-secret
+=======
+      - name: ecr-secret
+
+>>>>>>> df89b18 (support node selector)

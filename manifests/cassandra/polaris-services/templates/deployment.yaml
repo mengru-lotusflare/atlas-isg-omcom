@@ -2,8 +2,7 @@
 {{- range $chartName, $chart := .Subcharts }}
   {{- if or (eq $selected "") (eq $chartName $selected) }}
     {{- if $chart.Values.deployment }}
-      {{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
----
+      {{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -30,17 +29,25 @@ spec:
         app: {{ $appName }}
         lotusflare.com/tag: {{ $chart.Values.deployment.image.tag }}
     spec:
-      {{- with $chart.Values.deployment.imagePullSecrets }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with $chart.Values.deployment.imagePullSecrets | default $.Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       volumes:
         - name: tmp-volume
           emptyDir: {}
-        {{- if $externalSecretEnabled }}
+        {{- $externalSecretEnabled := false }}
+        {{- $externalSecretConfig := $chart.Values.deployment.config.external_secret | default $.Values.deployment.config.external_secret }}
+        {{- if $externalSecretConfig }}
+        {{- if eq ($externalSecretConfig.enabled | toString) "true" }}
+        {{- $externalSecretEnabled = true }}
         - name: external-secret-volume
           secret:
             secretName: {{ $appName }}-secret
+        {{- end }}
         {{- end }}
         {{- if and .Values.extraVolumes .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}

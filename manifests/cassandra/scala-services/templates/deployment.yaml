@@ -33,6 +33,10 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
+      {{- with $chart.Values.nodeSelector | default $.Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with $chart.Values.deployment.imagePullSecrets | default $.Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -117,5 +121,6 @@ spec:
           readinessProbe:
             {{- toYaml $.Values.readinessProbe | nindent 12 }}
           {{- end }}
+    {{- end }}
   {{- end }}
 {{- end }}
