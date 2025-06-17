@@ -60,6 +60,9 @@ service:
 externalSecret:
   enabled: true
   refreshInterval: 1h
+  secretStoreRef:
+    name: isg-omcom-dv-cassandra-app-lua-secret-sm
+    kind: SecretStore
   data:
     - secretKey: com_lotusflare_dno_braintree_prod_base_url
       remoteRef:
