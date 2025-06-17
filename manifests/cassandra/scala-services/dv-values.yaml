@@ -1,2 +1,6 @@
 global:
   appName: isg-omcom
+
+deployment:
+  imagePullSecrets:
+      - name: isg-omcom-dv-jfrog-secret
