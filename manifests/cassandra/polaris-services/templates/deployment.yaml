@@ -4,7 +4,6 @@
     {{- if $chart.Values.deployment }}
       {{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
 ---
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -40,10 +39,25 @@ spec:
       volumes:
         - name: tmp-volume
           emptyDir: {}
-        {{- if $externalSecretEnabled }}
+        {{- $externalSecretEnabled := false }}
+        {{- if $chart.Values.deployment.config }}
+        {{- if $chart.Values.deployment.config.external_secret }}
+        {{- if eq ($chart.Values.deployment.config.external_secret.enabled | toString) "true" }}
+        {{- $externalSecretEnabled = true }}
         - name: external-secret-volume
           secret:
             secretName: {{ $appName }}-secret
+        {{- end }}
+        {{- end }}
+        {{- else if $.Values.deployment.config }}
+        {{- if $.Values.deployment.config.external_secret }}
+        {{- if eq ($.Values.deployment.config.external_secret.enabled | toString) "true" }}
+        {{- $externalSecretEnabled = true }}
+        - name: external-secret-volume
+          secret:
+            secretName: {{ $appName }}-secret
+        {{- end }}
+        {{- end }}
         {{- end }}
         {{- if and .Values.extraVolumes .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}
