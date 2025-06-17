@@ -3,6 +3,7 @@
   {{- if or (eq $selected "") (eq $chartName $selected) }}
     {{- if $chart.Values.deployment }}
       {{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
+      {{- $externalSecretEnabled := $chart.Values.externalSecret | default false }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -39,7 +40,7 @@ spec:
         {{- if $externalSecretEnabled }}
         - name: external-secret-volume
           secret:
-            secretName: {{ $appName }}-secret
+            secretName: {{ $appName }}-secrets
         {{- end }}
         {{- if and .Values.extraVolumes .Values.extraVolumeMounts }}
         {{- toYaml .Values.extraVolumes | nindent 8 }}
