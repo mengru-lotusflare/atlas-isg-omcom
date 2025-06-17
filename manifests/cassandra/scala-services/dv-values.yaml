@@ -3,4 +3,4 @@ global:
 
 deployment:
   imagePullSecrets:
-      - name: isg-omcom-dv-jfrog-secret
+      - name: ecr-secret
