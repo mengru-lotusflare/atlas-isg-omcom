@@ -1,39 +1,31 @@
+{{- $selected := .Values.subchart | default "" }}
 {{- range $chartName, $chart := .Subcharts }}
-{{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
-{{- $serviceType := $.Values.serviceDefaults.type }}
-{{- $servicePort := $.Values.serviceDefaults.port }}
-{{- $serviceTargetPort := $.Values.serviceDefaults.targetPort }}
-{{- $serviceProtocol := $.Values.serviceDefaults.protocol }}
-{{- $servicePortName := $.Values.serviceDefaults.portName }}
-
-{{- if $chart.Values.service }}
-{{- if $chart.Values.service.type }}{{ $serviceType = $chart.Values.service.type }}{{ end }}
-{{- if $chart.Values.service.port }}{{ $servicePort = $chart.Values.service.port }}{{ end }}
-{{- if $chart.Values.service.targetPort }}{{ $serviceTargetPort = $chart.Values.service.targetPort }}{{ end }}
-{{- if $chart.Values.service.protocol }}{{ $serviceProtocol = $chart.Values.service.protocol }}{{ end }}
-{{- if $chart.Values.service.portName }}{{ $servicePortName = $chart.Values.service.portName }}{{ end }}
-{{- end }}
+  {{- if or (eq $selected "") (eq $chartName $selected) }}
+    {{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ $appName }}
+  namespace: {{ $.Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ $appName }}
     app.kubernetes.io/instance: {{ $.Release.Name }}
     app.kubernetes.io/managed-by: {{ $.Release.Service }}
     app: {{ $appName }}
-  {{- with $.Values.annotations }}
+  {{- with $chart.Values.annotations | default $.Values.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  type: {{ $serviceType }}
+  {{- /* First try to get service values from subchart, fall back to parent chart */}}
+  type: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.type }}{{ else }}{{ $.Values.service.type }}{{ end }}
   ports:
-    - port: {{ $servicePort }}
-      targetPort: {{ $serviceTargetPort }}
-      protocol: {{ $serviceProtocol }}
-      name: {{ $servicePortName }}
+    - port: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.port }}{{ else }}{{ $.Values.service.port }}{{ end }}
+      targetPort: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.targetPort }}{{ else }}{{ $.Values.service.targetPort }}{{ end }}
+      protocol: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.protocol }}{{ else }}{{ $.Values.service.protocol }}{{ end }}
+      name: {{ if hasKey $chart.Values "service" }}{{ $chart.Values.service.portName }}{{ else }}{{ $.Values.service.portName }}{{ end }}
   selector:
     app: {{ $appName }}
+  {{- end }}
 {{- end }}
