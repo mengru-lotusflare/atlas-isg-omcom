@@ -23,17 +23,6 @@ deployment:
       memory: 256Mi
   env: []
 
-config:
-  operators:
-    - globecom
-    - globecomexternal
-
-  external_secret:
-    enabled: true
-    keys:
-      common:
-        - com.lotusflare.dno.braintree_prod.base_url
-
 # Global probe configurations
 livenessProbe:
   httpGet:
@@ -57,8 +46,20 @@ service:
   port: 80
   targetPort: 8080
 
+config:
+  operators:
+    - globecom
+    - globecomexternal
+
+  external_secret:
+    enabled: true
+    keys:
+      common:
+        - com.lotusflare.dno.braintree_prod.base_url
+
 externalSecret:
   enabled: true
+  annotations: {}
   refreshInterval: 1h
   secretStoreRef:
     name: isg-omcom-dv-cassandra-app-lua-secret-sm

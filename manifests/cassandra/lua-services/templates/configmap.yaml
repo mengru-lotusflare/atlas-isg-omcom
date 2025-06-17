@@ -1,7 +1,7 @@
 {{- $selected := .Values.subchart | default "" }}
 {{- range $chartName, $chart := .Subcharts }}
   {{- if or (eq $selected "") (eq $chartName $selected) }}
-    {{- if $chart.Values.config }}
+    {{- if $.Values.config }}
       {{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
 ---
 apiVersion: v1
@@ -19,8 +19,8 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 data:
-  {{- if $chart.Values.configFiles }}
-  {{- range $fileName, $fileContent := $chart.Values.configFiles }}
+  {{- if $.Values.configFiles }}
+  {{- range $fileName, $fileContent := $.Values.configFiles }}
   {{ $fileName }}: |
     {{- $fileContent | nindent 4 }}
   {{- end }}
