@@ -1,19 +1,9 @@
+{{- $selected := .Values.subchart | default "" }}
 {{- range $chartName, $chart := .Subcharts }}
-{{- if $chart.Values.deployment }}
-{{- $appName := $chartName | replace "isg-omcom-cassandra-polaris-services-" "" }}
-{{- $externalSecretEnabled := false }}
-{{- if $chart.Values.deployment.config }}
-{{- if $chart.Values.deployment.config.external_secret }}
-{{- $externalSecretEnabled = $chart.Values.deployment.config.external_secret.enabled }}
-{{- end }}
-{{- end }}
-{{- if not $externalSecretEnabled }}
-{{- if $.Values.deployment.config }}
-{{- if $.Values.deployment.config.external_secret }}
-{{- $externalSecretEnabled = $.Values.deployment.config.external_secret.enabled }}
-{{- end }}
-{{- end }}
-{{- end }}
+  {{- if or (eq $selected "") (eq $chartName $selected) }}
+    {{- if $chart.Values.deployment }}
+      {{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
+---
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -100,7 +90,7 @@ spec:
           {{- if .Values.deployment.envFrom }}
           envFrom:
             {{- toYaml .Values.deployment.envFrom | nindent 12 }}
-          {{- end }}  
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ $chart.Values.deployment.containerPort | default $.Values.deployment.containerPort }}
