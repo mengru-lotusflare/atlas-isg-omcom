@@ -1,6 +1,0 @@
-global:
-  appName: isg-omcom
-
-# ImagePullSecrets for AWS ECR
-imagePullSecrets:
-  - name: ecr-secret
