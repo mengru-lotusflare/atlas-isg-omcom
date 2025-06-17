@@ -4,4 +4,6 @@ global:
 deployment:
   imagePullSecrets:
       - name: ecr-secret
-
+nodeSelector:
+  group-name: worker-group-lfapps
+  node-type: worker
