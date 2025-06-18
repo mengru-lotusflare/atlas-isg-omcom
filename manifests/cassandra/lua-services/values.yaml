@@ -19,24 +19,29 @@ deployment:
       cpu: 100m
       memory: 128Mi
     limits:
-      cpu: 500m
-      memory: 256Mi
+      cpu: 100m
+      memory: 128Mi
   env: []
 
 # Global probe configurations
 livenessProbe:
   httpGet:
-    path: /health
+    path: /liveness
     port: http
-  initialDelaySeconds: 30
+  initialDelaySeconds: 5
   periodSeconds: 30
+  successThreshold: 1
+  timeoutSeconds: 10
+  failureThreshold: 3
 
 readinessProbe:
   httpGet:
-    path: /health
+    path: /readiness
     port: http
   initialDelaySeconds: 5
-  periodSeconds: 10
+  periodSeconds: 30
+  successThreshold: 1
+  timeoutSeconds: 10
 
 # Global service configurations
 service:

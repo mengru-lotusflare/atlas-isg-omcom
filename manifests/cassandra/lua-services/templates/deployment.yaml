@@ -46,6 +46,9 @@ spec:
       volumes:
         - name: tmp-volume
           emptyDir: {}
+        - name: config-volume
+          configMap:
+            name: {{ $appName }}
         {{- $externalSecretEnabled := false }}
         {{- $externalSecretConfig := $chart.Values.config.external_secret | default $.Values.config.external_secret }}
         {{- if $externalSecretConfig }}
@@ -68,6 +71,10 @@ spec:
           volumeMounts:
             - name: tmp-volume
               mountPath: /tmp
+            - name: config-volume
+              mountPath: /mnt/lua/config.lua
+              subPath: config.lua
+              readOnly: true
             {{- if $externalSecretEnabled }}
             - name: external-secret-volume
               mountPath: /mnt/lua/secrets.lua
@@ -79,6 +86,10 @@ spec:
             {{- toYaml $resources | nindent 12 }}
           env:
             - name: K8S_POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.uid
+            - name: K8S_POD_NAME
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
