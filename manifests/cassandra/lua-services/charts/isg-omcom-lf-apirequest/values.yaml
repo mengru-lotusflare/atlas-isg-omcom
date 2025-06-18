@@ -6,4 +6,9 @@ deployment:
 
 config:
   service: apirequest
+  external_secret:
+    enabled: true
+    keys:
+      common:
+        - com.lotusflare.dno.braintree_prod.base_url
 

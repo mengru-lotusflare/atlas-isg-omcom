@@ -7,4 +7,9 @@ deployment:
 
 config:
   service: authorization
+  external_secret:
+    enabled: true
+    keys:
+      common:
+        - com.lotusflare.dno.braintree_prod.base_url
 
