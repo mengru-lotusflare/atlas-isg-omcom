@@ -8,13 +8,13 @@ launcher_config: {}
 
 dependencies:
   cassandra:
-    enabled: true
+    enabled: false
   kafka:
-    enabled: true
+    enabled: false
   redis:
-    enabled: true
+    enabled: false
   jcm:
-    enabled: true
+    enabled: false
 
 overrides:
   jarName: lf-api-invoker
@@ -75,3 +75,5 @@ config:
   predefined-labels:
     app: api-invoker
   producer-product: DNO Platform
+  opentelemetry:
+    enabled: false
