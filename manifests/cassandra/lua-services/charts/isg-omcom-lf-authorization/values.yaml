@@ -5,4 +5,6 @@ deployment:
     tag: master-2025-06-09-2000-e369c06
     pullPolicy: IfNotPresent
 
-config: {}
+config:
+  service: authorization
+

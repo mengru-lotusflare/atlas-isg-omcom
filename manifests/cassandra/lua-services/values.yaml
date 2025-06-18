@@ -52,8 +52,7 @@ config:
   cassandra:
     enabled: true
     hosts:
-      - cassandra-1.isg-omcom-dv-cassandra-kns.svc.cluster.local
-      - cassandra-2.isg-omcom-dv-cassandra-kns.svc.cluster.local
+      - 10.220.155.104
     log_slow_queries: false
     profiler_enabled: true
     retry_max: 3
@@ -72,24 +71,24 @@ config:
   operators:
     - globecom
     - globecomexternal
-  kafka_manager:
-    broker_list:
-      - host: kafka-0.dc22.lf
-        port: 9092
-      - host: kafka-1.dc22.lf
-        port: 9092
-      - host: kafka-2.dc22.lf
-        port: 9092
-    ssl: false
-  kafka_logger_config:
-    enable_kafka_produce_logs: true
-    log_percent: 80
+  # kafka_manager:
+  #   broker_list:
+  #     - host: kafka-0.dc22.lf
+  #       port: 9092
+  #     - host: kafka-1.dc22.lf
+  #       port: 9092
+  #     - host: kafka-2.dc22.lf
+  #       port: 9092
+  #   ssl: false
+  # kafka_logger_config:
+  #   enable_kafka_produce_logs: true
+  #   log_percent: 80
   redis:
-    host: isg-omcom-dv-com-valkey-esv-y4vas7.serverless.apse1.cache.amazonaws.com:6379
+    host: isg-omcom-dv-com-valkey-esv-y4vas7.serverless.apse1.cache.amazonaws.com
     ssl: true
     pool_size: "15"
   redis_read_replica:
-    hosts: dc22-elc-1-001.dc22-elc-1.kwsfrt.usw2.cache.amazonaws.com
+    hosts: isg-omcom-dv-com-valkey-esv-y4vas7.serverless.apse1.cache.amazonaws.com
   data_bucket_prefix: lf.aws-us-west-2-dc22.
   ssm_enabled: true
   external_secret:
