@@ -84,11 +84,8 @@ spec:
             - mountPath: /mnt
               name: data
           resources:
-            {{- if $chart.Values.deployment.resources }}
-            {{- toYaml $chart.Values.deployment.resources | nindent 12 }}
-            {{- else if $.Values.deployment.resources }}
-            {{- toYaml $.Values.deployment.resources | nindent 12 }}
-            {{- end }}
+            {{- $resources := $chart.Values.deployment.resources | default $.Values.deployment.resources }}
+            {{- toYaml $resources | nindent 12 }}
           env:
             - name: K8S_POD_ID
               valueFrom:
