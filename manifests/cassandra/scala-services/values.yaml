@@ -43,6 +43,9 @@ overrides:
   jarName: ""
 
 config:
+  additional-configs:
+    enabled: false
+    location: "/app/config"
   akka:
     http: # used by Alpakka S3
       client:

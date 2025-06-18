@@ -1,0 +1,15 @@
+{{- if (get .Values.application.config "additional-configs").enabled }}
+{{- range $configId, $config := .Values.application.additionalConfigs }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+{{- $configMapName := printf "%s.%s" (include "app.name" $) ($configId | replace "_" "-") }}
+  name: {{ $configMapName }}
+  labels:
+    {{- include "app.labels" $ | nindent 4 }}
+data:
+  {{ $configId }}.json: |
+    {{- $config | toPrettyJson | nindent 4 }}
+---
+{{- end }}
+{{- end }}
