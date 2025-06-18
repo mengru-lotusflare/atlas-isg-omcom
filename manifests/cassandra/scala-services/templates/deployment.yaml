@@ -52,10 +52,6 @@ spec:
             defaultMode: 420
             name: {{ $appName }}
           name: config
-        - configMap:
-            defaultMode: 420
-            name: {{ $appName }}
-          name: default-config
         - emptyDir: {}
           name: data
       containers:

@@ -4,15 +4,13 @@ deployment:
     repository: 637423436902.dkr.ecr.ap-southeast-1.amazonaws.com/isg-omcom/lf-images/lf-cep-prioritizer
     tag: master-2025-06-11-0839-a2f2fa7
     pullPolicy: IfNotPresent
-  env:
-    - name: JAVA_OPTS
-      value: "-Xms512m -Xmx1g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/dump"
-    - name: APP_NAME
-      value: "isg-omcom-lf-cep-prioritizer"
-    - name: CONFIG_FILE
-      value: "/app/application.conf"
-    - name: LAUNCHER_CONFIG_FILE
-      value: "/launcher-config.yaml"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
 
 overrides:
   jarName: lf-prioritizer
