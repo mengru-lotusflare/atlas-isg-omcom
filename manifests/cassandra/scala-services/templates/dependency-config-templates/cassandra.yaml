@@ -1,0 +1,20 @@
+{{/* vim: set filetype=mustache: */}}
+
+{{/*
+  Cassandra minimal configuration template.
+*/}}
+{{- define "app.dependencies.config.cassandra" }}
+{{- with .Values.dependencies.cassandra }}
+{{- if .enabled }}
+cassandra:
+  hosts: {{ join "," .hosts }}
+  port: {{ .port }}
+  dlq-config:
+    app-name: {{ $.Values.application.name }}
+    dlq-topic: {{ .dlqTopic }}
+  metrics:
+    enabled: true
+    period: 10000
+{{- end }}
+{{- end }}
+{{- end }}

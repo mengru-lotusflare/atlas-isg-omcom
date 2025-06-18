@@ -1,0 +1,13 @@
+{{/* vim: set filetype=mustache: */}}
+
+{{/*
+  Dependencies Configuration.
+*/}}
+{{- define "app.dependencies.config" }}
+{{- include "app.dependencies.config.kafka" . }}
+{{- include "app.dependencies.config.cassandra" . }}
+{{- include "app.dependencies.config.redis" . }}
+{{- include "app.dependencies.config.objectStorage" . }}
+{{- include "app.dependencies.config.jcm" . }}
+
+{{- end }}

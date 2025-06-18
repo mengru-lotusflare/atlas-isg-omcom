@@ -1,0 +1,31 @@
+{{/* vim: set filetype=mustache: */}}
+
+{{/*
+  Job config management minimal configuration template.
+*/}}
+{{- define "app.dependencies.config.jcm" }}
+{{- with .Values.application.dependencies.jcm }}
+{{- if .enabled }}
+job-config-management:
+  app-name: "{{ include "app.shortName" $ }}"
+  dc: "{{ default .dc }}"
+  scheduler:
+    enabled: true
+    initial-delay: 20 seconds
+    period: 1 minute
+    termination-timeout: 6 minutes
+  dist-lock:
+    resource-name: "default-job-config-management-dist-lock"
+    ttl: 30 seconds
+  provider:
+    parameter-store:
+      enabled: true
+  repository:
+    default-namespace: "job-config-management"
+    lf-remote-config:
+      scheme: "http"
+      host: "lf-remoteconfig.lotusflare.svc.cluster.local"
+      port: "80"
+{{- end }}
+{{- end }}
+{{- end }}

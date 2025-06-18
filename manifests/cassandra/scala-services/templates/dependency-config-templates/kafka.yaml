@@ -1,0 +1,151 @@
+{{/* vim: set filetype=mustache: */}}
+
+{{/*
+  Kafka minimal configuration template.
+*/}}
+{{- define "app.dependencies.config.kafka" }}
+{{- with .Values.dependencies.kafka }}
+{{- if .enabled }}
+kafka:
+  consumer:
+    kafka-clients:
+      bootstrap:
+        servers: "{{- include "kafka.bootstrap.servers" $ }}"
+      auto:
+        commit:
+          interval:
+            ms: 250
+        offset:
+          reset: earliest
+      enable:
+        auto:
+          commit: true
+      {{- if .overrides.consumer.group }}
+      group:
+        id: "{{ .overrides.consumer.group }}"
+      {{- end }}
+      key:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      security:
+        protocol: PLAINTEXT
+      session:
+        timeout:
+          ms: 300000
+      value:
+        deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    max-wakeups: 256
+    poll-interval: 100ms
+    poll-timeout: 1s
+    stop-timeout: 30s
+    use-dispatcher: akka.kafka.default-dispatcher
+    wait-close-partition: 5s
+    wakeup-debug: false
+    wakeup-timeout: 2s
+    position-timeout: 5s
+    offset-for-times-timeout: 5s
+    metadata-request-timeout: 5s
+    eos-draining-check-interval: 30ms
+    batch-interval: 10s
+    batch-size: "{{ .overrides.consumer.batchSize | default 500 }}"
+    close-timeout: 25s
+    commit-refresh-interval: infinite
+    commit-time-warning: 5s
+    commit-timeout: 20s
+    partition-handler-warning: 5s
+    connection-checker:
+      enable: false
+      max-retries: 3
+      check-interval: 15s
+      backoff-factor: 2.0
+    offset-reset-protection:
+      enable: false
+      offset-threshold: 9223372036854775807
+      time-threshold: 100000 days
+  producer:
+    bootstrap:
+      servers: "{{- include "kafka.bootstrap.servers" $ }}"
+    buffer:
+      memory: 134217728
+    key:
+      serializer: org.apache.kafka.common.serialization.StringSerializer
+    max:
+      block:
+        ms: 25000
+      request:
+        size: 5242880
+    security:
+      protocol: PLAINTEXT
+    value:
+      serializer: org.apache.kafka.common.serialization.StringSerializer
+    batch:
+      size: 5000
+  admin:
+    bootstrap:
+      servers: "{{- include "kafka.bootstrap.servers" $ }}"
+akka:
+  kafka:
+    consumer:
+      position-timeout: 5s
+      offset-for-times-timeout: 5s
+      metadata-request-timeout: 5s
+      eos-draining-check-interval: 30ms
+      close-timeout: 20s
+      commit-time-warning: 1s
+      commit-timeout: 15s
+      kafka-clients:
+        batch:
+          size: "{{ .overrides.consumer.batchSize | default 500 }}"
+        auto:
+          offset:
+            reset: earliest
+        bootstrap:
+          servers: "{{- include "kafka.bootstrap.servers" $ }}"
+        enable:
+          auto:
+            commit: "true"
+        fetch:
+          max:
+            wait:
+              ms: "250"
+        {{- if .overrides.consumer.group }}
+        group:
+          id: "{{ .overrides.consumer.group }}"
+        {{- end }}
+        max:
+          poll:
+            records: "65536"
+        session:
+          timeout:
+            ms: "30000"
+      max-wakeups: "100"
+      poll-interval: 250ms
+      poll-timeout: 250ms
+      stop-timeout: 30s
+      use-dispatcher: akka.kafka.default-dispatcher
+      wakeup-debug: "false"
+      wakeup-timeout: 5s
+      partition-handler-warning: 5s
+      connection-checker:
+        enable: false
+        max-retries: 3
+        check-interval: 15s
+        backoff-factor: 2.0
+      offset-reset-protection:
+        enable: false
+        offset-threshold: 9223372036854775807
+        time-threshold: 100000 days
+    producer:
+      eos-commit-interval: 100ms
+      close-timeout: 15s
+      kafka-clients:
+        acks: "1"
+        batch:
+          size: "32768"
+        bootstrap:
+          servers: "{{- include "kafka.bootstrap.servers" $ }}"
+        linger:
+          ms: "50"
+      parallelism: "8"
+{{- end }}
+{{- end }}
+{{- end }}

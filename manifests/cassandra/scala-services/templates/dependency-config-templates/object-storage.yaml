@@ -1,0 +1,27 @@
+{{/* vim: set filetype=mustache: */}}
+
+{{/*
+  Redis minimal configuration template.
+*/}}
+{{- define "app.dependencies.config.objectStorage" }}
+{{- with .Values.dependencies.objectStorage }}
+{{- if .enabled }}
+object-storage:
+  {{- if .presigner }}
+  presigner:
+    {{- toYaml .presigner | nindent 4 }}
+  {{- end }}
+  provider-name: {{ .provider }}
+
+  s3:
+    access-style: {{ .overrides.s3.accessStyle | default "path" }}
+    aws:
+      region:
+        default-region: {{ .overrides.s3.region | default "us-east-1" }}
+  {{- if .overrides.azureBlobStorage.connectionString }}
+  azure-blob-storage:
+    connection-string: {{ .overrides.azureBlobStorage.connectionString }}
+  {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

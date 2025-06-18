@@ -1,0 +1,39 @@
+{{/* vim: set filetype=mustache: */}}
+
+{{/*
+  Redis minimal configuration template.
+*/}}
+{{- define "app.dependencies.config.redis" }}
+{{- with .Values.dependencies.redis }}
+{{- $dependencyRoot := . }}
+{{- if .enabled }}
+redis:
+  host: "{{ first .hosts }}"
+  host_read_replicas: {{ .hostReadReplicas }}
+  max_connections: 32
+  max_pool_size: 100
+  metrics:
+    enabled: true
+    period: 60000
+  port: "{{ .port }}"
+  ssl: {{ .sslEnabled }}
+  {{- if .specializedRedisClustersMap }}
+  specialized_redis_clusters_map:
+    {{- range $index, $config := .specializedRedisClustersMap }}
+    {{ $config.clusterName }}:
+      host: "{{ first $config.hosts }}"
+      {{- if $config.hostReadReplicas }}
+      host_read_replicas: {{ $config.hostReadReplicas }}
+      {{- end }}
+      max_connections: 32
+      max_pool_size: 100
+      metrics:
+        enabled: true
+        period: 60000
+      port: "{{ $config.port | default $dependencyRoot.port }}"
+      ssl: {{ $config.sslEnabled | default $dependencyRoot.sslEnabled }}
+    {{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
