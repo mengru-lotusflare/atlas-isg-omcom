@@ -62,9 +62,9 @@ spec:
         - name: {{ $appName }}
           image: "{{ $chart.Values.deployment.image.repository }}:{{ $chart.Values.deployment.image.tag | default $.Chart.AppVersion }}"
           imagePullPolicy: {{ $chart.Values.deployment.image.pullPolicy | default $.Values.deployment.image.pullPolicy }}
-          # command: [ "/launcher" ]
-          command: ["/bin/sh"]
-          args: ["-c", "while true; do sleep 30; done"]
+          command: [ "/launcher" ]
+          # command: ["/bin/sh"]
+          # args: ["-c", "while true; do sleep 30; done"]
           volumeMounts:
             - mountPath: /dump
               name: heap-dumps
