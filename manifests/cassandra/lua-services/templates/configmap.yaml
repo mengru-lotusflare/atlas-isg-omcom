@@ -1,7 +1,12 @@
+{{- /*
+  The logic is placed before the '---' separator to keep the generated YAML clean.
+*/}}
 {{- $selected := .Values.subchart | default "" }}
 {{- range $chartName, $chart := .Subcharts }}
   {{- if or (eq $selected "") (eq $chartName $selected) }}
     {{- if $.Values.config }}
+      {{- /* Create a safe copy of the parent config and merge the subchart config into it */}}
+      {{- $mergedConfig := merge (deepCopy $.Values.config) $chart.Values.config -}}
       {{- $appName := $chartName | replace "isg-omcom-cassandra-lua-services-" "" }}
 ---
 apiVersion: v1
@@ -19,39 +24,16 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 data:
-  {{- if $.Values.configFiles }}
-  {{- range $fileName, $fileContent := $.Values.configFiles }}
-  {{ $fileName }}: |
-    {{- $fileContent | nindent 4 }}
-  {{- end }}
-  {{- end }}
+  config.lua: |
+    local cjson = require "cjson.safe"
+    local config = [[
+    {{- /* Use the new mergedConfig variable here instead of the original one */}}
+    {{- $mergedConfig | mustToPrettyJson | nindent 4 }}
+    ]]
 
-  {{- if or $chart.Values.config $.Values.config }}
-  lua_config.json: |
-    {{- $config := dict }}
-
-    {{- if $chart.Values.config }}
-    {{- $config = merge $config $chart.Values.config }}
-    {{- else }}
-    {{- $config = merge $config $.Values.config }}
-    {{- end }}
-
-    {{- if $chart.Values.dependencies }}
-    {{- $config = merge $config (dict "dependencies" $chart.Values.dependencies) }}
-    {{- else if $.Values.dependencies }}
-    {{- $config = merge $config (dict "dependencies" $.Values.dependencies) }}
-    {{- end }}
-
-    {{- $config | toPrettyJson | nindent 4 }}
-  {{- end }}
-
-  {{- if $chart.Values.nginx }}
-  nginx.conf: |
-    {{- $chart.Values.nginx | nindent 4 }}
-  {{- else if $.Values.nginx }}
-  nginx.conf: |
-    {{- $.Values.nginx | nindent 4 }}
-  {{- end }}
+    return setmetatable({}, {
+        __index = cjson.decode(config),
+    })
     {{- end }}
   {{- end }}
 {{- end }}
