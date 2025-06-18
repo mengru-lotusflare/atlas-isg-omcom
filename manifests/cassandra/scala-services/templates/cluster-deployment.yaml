@@ -110,7 +110,7 @@ spec:
             - name: config
               mountPath: "/app/application.conf"
               subPath: application_config.json
-            - name: default-config
+            - name: config
               mountPath: "/app/static_jobs.json"
               subPath: static_jobs.json
             {{- if $.Values.application.dependencies.logstash.enabled }}

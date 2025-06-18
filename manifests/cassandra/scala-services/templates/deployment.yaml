@@ -52,10 +52,6 @@ spec:
             defaultMode: 420
             name: {{ $appName }}
           name: config
-        - configMap:
-            defaultMode: 420
-            name: {{ $appName }}
-          name: default-config
         - emptyDir: {}
           name: data
       containers:
@@ -76,7 +72,7 @@ spec:
               name: config
               subPath: application_config.json
             - mountPath: /app/static_jobs.json
-              name: default-config
+              name: config
               subPath: static_jobs.json
             - mountPath: /launcher-config.yaml
               name: config
