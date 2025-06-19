@@ -2,6 +2,9 @@
 {{- range $chartName, $chart := .Subcharts }}
   {{- if or (eq $selected "") (eq $chartName $selected) }}
     {{- if $chart.Values.config }}
+      {{/* Use the helper to generate available clusters */}}
+      {{- $availableClusters := include "available.cluster.list" $chart | fromYaml }}
+      {{- $clusterNameConfig := dict "clusters" (merge (dict "cluster-name" "default") $availableClusters) }}
       {{- $appName := $chartName | replace "isg-omcom-cassandra-scala-services-" "" }}
 ---
 apiVersion: v1
@@ -25,6 +28,7 @@ data:
     {{- else if $.Values.config }}
     {{- $config = merge $config $.Values.config }}
     {{- end }}
+    {{- $config = merge $config $clusterNameConfig }}
     {{- $dependencies := $chart.Values.dependencies | default $.Values.dependencies }}
     {{- if $dependencies }}
     {{- $config = merge $config (dict "dependencies" $dependencies) }}
@@ -37,11 +41,11 @@ data:
     {{- if $jobs }}
     {{- range $jobName, $jobConfig := $jobs }}
       {{- if hasKey $jobConfig "enabled" }}
-        {{- if eq (toString $jobConfig.enabled) "true" }}
-          {{- $_ := set $filteredJobs $jobName $jobConfig }}
-        {{- end }}
+      {{- if eq (toString $jobConfig.enabled) "true" }}
+      {{- $_ := set $filteredJobs $jobName $jobConfig }}
+      {{- end }}
       {{- else }}
-          {{- $_ := set $filteredJobs $jobName $jobConfig }}
+      {{- $_ := set $filteredJobs $jobName $jobConfig }}
       {{- end }}
     {{- end }}
     {{- end }}

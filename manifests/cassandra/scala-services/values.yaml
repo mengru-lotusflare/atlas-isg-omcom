@@ -42,6 +42,8 @@ service:
 overrides:
   jarName: ""
 
+clusters: {}
+
 config:
   akka:
     http: # used by Alpakka S3
