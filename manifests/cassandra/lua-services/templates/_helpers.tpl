@@ -15,31 +15,13 @@ Returns the external secret keys.
 
 
 {{/*
-  Check if the current subchart matches the target
-  Returns "true" or "false" as a string
-  */}}
-  {{- define "isTargetSubchart" -}}
-  {{- $subchart := .subchart | default "" -}}
-  {{- $target := .target | default "" -}}
-  {{- if eq $subchart $target -}}
-  {{- "true" -}}
-  {{- else -}}
-  {{- "false" -}}
-  {{- end -}}
-  {{- end -}}
-  
-  {{/* Control which subcharts are enabled based on subchart parameter */}}
-  {{- define "lua-services.init" -}}
-  {{- if .Values.onlyEnableSelectedSubchart }}
-    {{- range $name, $subchart := .Subcharts }}
-      {{- if ne $name $.Values.subchart }}
-        {{- $_ := set $subchart.Values "enabled" false }}
-      {{- else }}
-        {{- $_ := set $subchart.Values "enabled" true }}
-      {{- end }}
-    {{- end }}
-  {{- end }}
-  {{- end -}}
-  
-  {{/* Call the initialization function */}}
-  {{- template "lua-services.init" . -}}
+  Include a static file from a subchart when the subchart is selected
+*/}}
+{{- define "lua-services.includeStaticFile" -}}
+{{- $subchart := .subchart -}}
+{{- $filepath := .filepath -}}
+{{- $currentSubchart := .currentSubchart -}}
+{{- if eq $subchart $currentSubchart -}}
+{{- $.Files.Get $filepath -}}
+{{- end -}}
+{{- end -}}

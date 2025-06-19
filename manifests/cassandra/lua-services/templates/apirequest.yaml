@@ -1,0 +1,12 @@
+{{- $subchart := .Values.subchart | default "" }}
+{{- if ne $subchart "" }}
+  {{- /* Include all static files from the selected subchart's templates directory */ -}}
+  {{- $pattern := printf "charts/%s/templates/*.yaml" $subchart }}
+  {{- range $path, $_ := .Files.Glob $pattern }}
+    {{- /* Skip files starting with underscore which are typically helpers */ -}}
+    {{- if not (hasPrefix (printf "charts/%s/templates/_" $subchart) $path) }}
+---
+{{ $.Files.Get $path }}
+    {{- end }}
+  {{- end }}
+{{- end }}
