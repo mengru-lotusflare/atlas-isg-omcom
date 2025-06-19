@@ -12,3 +12,9 @@ Returns the external secret keys.
 {{- end }}
 {{- join "," $externalSecretKeys -}}
 {{- end -}}
+{{/* Check if current subchart matches target */}}
+{{- define "isTargetSubchart" -}}
+{{- $subchart := .subchart | default "" -}}
+{{- $target := .target | default "" -}}
+{{- eq $subchart $target -}}
+{{- end -}}
